@@ -18,8 +18,9 @@
     "cli",
     "env"
   ],
-  "author": "",
-  "license": "MIT",
+  "author": "Rob Graham <rob@fineartmedia.tech> (https://fineartmedia.tech)",
+  "private": true,
+  "license": "UNLICENSED",
   "devDependencies": {
     "@types/node": "^22.10.2",
     "typescript": "^5.7.2"

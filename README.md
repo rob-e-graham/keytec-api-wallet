@@ -131,3 +131,14 @@ See [KEYTEC_API_WALLET_BUILD.md](./KEYTEC_API_WALLET_BUILD.md) for the complete 
 ## OpenClaw Boundary
 
 OpenClaw support and onboarding systems must not access vault contents, call Keychain APIs, or receive raw environment values. Only sanitized CLI errors, usage events, and documentation content are allowed.
+
+## Rights Notice
+
+Copyright (c) 2026 Rob Graham.
+All rights reserved.
+
+This repository is published for authorship, visibility, and evaluation purposes only. No permission is granted to use, copy, modify, distribute, sublicense, sell, or create derivative works from this code, documentation, screenshots, or associated materials without prior written permission from Rob Graham.
+
+Website: [fineartmedia.tech](https://fineartmedia.tech)
+
+Contact: [rob@fineartmedia.tech](mailto:rob@fineartmedia.tech)

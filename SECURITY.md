@@ -20,3 +20,7 @@ Keytec API Wallet is designed around local-first secret handling.
 ## Reporting Issues
 
 Please avoid posting real tokens in issues, logs, screenshots, or discussions. If a key may have been exposed, rotate it at the provider immediately.
+
+For private security or licensing contact, email [rob@fineartmedia.tech](mailto:rob@fineartmedia.tech).
+
+Project website: [fineartmedia.tech](https://fineartmedia.tech).

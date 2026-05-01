@@ -304,6 +304,17 @@ Recommended public description:
 Local-first API credential wallet and runtime injection prototype.
 ```
 
+## Ownership And Rights
+
+Copyright (c) 2026 Rob Graham.
+All rights reserved.
+
+This prototype, its source code, documentation, screenshots, app wrapper, and associated materials are published for authorship, visibility, and evaluation only. No permission is granted to use, copy, modify, distribute, sublicense, sell, or create derivative works without prior written permission from Rob Graham.
+
+Website: [fineartmedia.tech](https://fineartmedia.tech)
+
+Contact: [rob@fineartmedia.tech](mailto:rob@fineartmedia.tech)
+
 ## MVP Definition
 
 A successful MVP allows a developer to:
