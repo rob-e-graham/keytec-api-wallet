@@ -10,6 +10,30 @@ Store once -> attach to a project -> inject at runtime -> never expose
 
 The prototype replaces fragile `.env` workflows with a local keychain-backed CLI and a browser-based operational console.
 
+## Screenshots
+
+The repository includes fresh prototype screenshots in:
+
+```text
+docs/screenshots/
+```
+
+Desktop dashboard:
+
+![Keytec dashboard desktop](./docs/screenshots/keytec-dashboard-desktop.png)
+
+Token handle table:
+
+![Keytec token handles desktop](./docs/screenshots/keytec-tokens-desktop.png)
+
+Instruction mode:
+
+![Keytec instruction mode](./docs/screenshots/keytec-instruction-mode.png)
+
+Mobile preview:
+
+<img src="./docs/screenshots/keytec-mobile-dashboard.png" alt="Keytec mobile dashboard" width="320">
+
 ## Current Prototype State
 
 The build includes:

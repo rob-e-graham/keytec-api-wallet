@@ -44,6 +44,7 @@
       color: var(--ink);
       font-family: var(--sans);
       letter-spacing: 0;
+      overflow-x: hidden;
     }
 
     button,
@@ -948,10 +949,72 @@
     }
 
     @media (max-width: 560px) {
+      .subtitle {
+        max-width: 100%;
+        line-height: 1.55;
+        white-space: normal;
+      }
+
+      .top-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        justify-content: flex-start;
+        width: 100%;
+      }
+
+      .top-actions .btn {
+        width: 100%;
+      }
+
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .workspace {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .main {
+        order: 1;
+      }
+
+      .left-rail {
+        order: 2;
+      }
+
+      .right-rail {
+        order: 3;
+      }
+
       .status-grid,
       .metric-grid,
       .right-rail {
         grid-template-columns: 1fr;
+      }
+
+      .status-cell {
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        min-height: 46px;
+        white-space: normal;
+      }
+
+      .status-cell strong {
+        white-space: normal;
+      }
+
+      .tab {
+        min-width: 126px;
+      }
+
+      .notice p,
+      .card p,
+      .mobile-question {
+        overflow-wrap: anywhere;
       }
 
       .run-strip {
@@ -1263,13 +1326,19 @@
       }
     };
 
+    const params = new URLSearchParams(window.location.search);
+    const requestedView = params.get("view");
+    const instructionOverride = params.get("instruction");
+
     const state = {
       profiles: [],
       commands: [],
       tokens: [],
       selectedProject: "",
-      activeView: "dashboard",
-      instructionMode: localStorage.getItem("keytec-instruction-mode") === "true"
+      activeView: titles[requestedView] ? requestedView : "dashboard",
+      instructionMode: instructionOverride === null
+        ? localStorage.getItem("keytec-instruction-mode") === "true"
+        : instructionOverride === "1"
     };
 
     const instructionToggle = document.getElementById("instruction-toggle");
@@ -1308,10 +1377,14 @@
     document.getElementById("token-search").addEventListener("input", renderTokenTable);
     document.getElementById("provider-filter").addEventListener("change", renderTokenTable);
 
-    fetch("/api/status")
-      .then((response) => response.json())
-      .then((payload) => hydrate(payload))
-      .catch(() => hydrate(getFallbackPayload()));
+    if (params.get("demo") === "1") {
+      hydrate(getFallbackPayload());
+    } else {
+      fetch("/api/status")
+        .then((response) => response.json())
+        .then((payload) => hydrate(payload))
+        .catch(() => hydrate(getFallbackPayload()));
+    }
 
     function hydrate(payload) {
       state.profiles = payload.profiles || [];
@@ -1319,6 +1392,7 @@
       state.tokens = buildTokens(state.profiles);
       state.selectedProject = state.profiles[0]?.name || "";
       renderStatus(payload);
+      activateView(state.activeView);
     }
 
     function activateView(view) {

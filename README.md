@@ -4,6 +4,24 @@ Local-first API credential vault and runtime injection for developers.
 
 Store once. Inject at runtime. Never expose.
 
+## Screenshots
+
+### Dashboard
+
+![Keytec dashboard desktop](./docs/screenshots/keytec-dashboard-desktop.png)
+
+### Token Handles
+
+![Keytec token handles desktop](./docs/screenshots/keytec-tokens-desktop.png)
+
+### Instruction Mode
+
+![Keytec instruction mode](./docs/screenshots/keytec-instruction-mode.png)
+
+### Mobile Preview
+
+<img src="./docs/screenshots/keytec-mobile-dashboard.png" alt="Keytec mobile dashboard" width="320">
+
 ## MVP
 
 This prototype implements the core CLI workflow:
