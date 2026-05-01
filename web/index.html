@@ -1,0 +1,1577 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Keytec API Wallet</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap");
+
+    :root {
+      color-scheme: dark;
+      --bg: #080808;
+      --ink: #e7e1d8;
+      --ink-soft: #a49b91;
+      --ink-faint: #5f5850;
+      --panel: #101010;
+      --panel-2: #151515;
+      --panel-3: #1b1b1b;
+      --line: #242424;
+      --line-2: #343434;
+      --famtec: #b0c87a;
+      --cyan: #8fbcb0;
+      --gold: #c7a65a;
+      --warn: #c87060;
+      --info: #7896cf;
+      --ok: #79aa86;
+      --serif: "Cormorant Garamond", Georgia, serif;
+      --mono: "DM Mono", "SFMono-Regular", Consolas, monospace;
+      --sans: "DM Sans", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+      letter-spacing: 0;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .shell {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 50% 0, rgba(255, 255, 255, 0.025), transparent 36rem),
+        var(--bg);
+    }
+
+    .mono,
+    .meta,
+    .status-cell,
+    .tab,
+    .btn,
+    .chip,
+    .label,
+    .small,
+    code,
+    th,
+    .token-name,
+    .metric-label,
+    .wordmark,
+    .mobile-code {
+      font-family: var(--mono);
+      letter-spacing: 0;
+    }
+
+    .masthead {
+      position: relative;
+      min-height: 148px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(8, 8, 8, 0.96);
+    }
+
+    .brand {
+      position: absolute;
+      left: 48px;
+      bottom: 18px;
+      min-width: 0;
+    }
+
+    .wordmark {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: 0.42em;
+    }
+
+    .wordmark .accent {
+      color: var(--famtec);
+      font-style: italic;
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      color: var(--ink-faint);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .control-cluster {
+      position: absolute;
+      right: 48px;
+      bottom: 18px;
+      display: grid;
+      justify-items: end;
+      gap: 9px;
+      color: var(--ink-faint);
+    }
+
+    .build-line,
+    .access-line {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn,
+    .role-select {
+      min-height: 30px;
+      border: 1px solid var(--line-2);
+      border-radius: 0;
+      color: var(--ink-soft);
+      background: transparent;
+      padding: 0 12px;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .btn:hover,
+    .role-select:hover {
+      border-color: var(--famtec);
+      color: var(--famtec);
+    }
+
+    .btn.primary {
+      border-color: rgba(176, 200, 122, 0.72);
+      color: #0c0f08;
+      background: var(--famtec);
+      font-weight: 700;
+    }
+
+    .learn-toggle[aria-pressed="true"] {
+      border-color: var(--famtec);
+      color: var(--famtec);
+      background: rgba(176, 200, 122, 0.08);
+    }
+
+    .role-select {
+      width: 152px;
+      color: var(--ink);
+      background: #070707;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr 1fr 1fr 1.1fr 0.9fr;
+      border-bottom: 1px solid var(--line);
+      background: #0b0b0b;
+    }
+
+    .status-cell {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 35px;
+      border-right: 1px solid var(--line);
+      color: var(--ink-faint);
+      padding: 0 14px;
+      font-size: 11px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .status-cell:last-child {
+      border-right: 0;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      margin-right: 7px;
+      border-radius: 50%;
+      background: var(--ok);
+      vertical-align: middle;
+    }
+
+    .dot.warn {
+      background: var(--gold);
+    }
+
+    .dot.info {
+      background: var(--info);
+    }
+
+    .status-cell strong {
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+
+    .module-tabs {
+      display: flex;
+      min-height: 43px;
+      border-bottom: 1px solid var(--line);
+      background: #090909;
+      overflow-x: auto;
+    }
+
+    .tab {
+      position: relative;
+      min-width: 150px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      color: var(--ink-faint);
+      background: transparent;
+      padding: 0 17px;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .tab:hover {
+      color: var(--ink-soft);
+    }
+
+    .tab[aria-selected="true"] {
+      color: var(--famtec);
+    }
+
+    .tab[aria-selected="true"]::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      background: var(--famtec);
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 292px minmax(0, 1fr) 330px;
+      min-height: calc(100vh - 227px);
+    }
+
+    .left-rail,
+    .right-rail {
+      border-right: 1px solid var(--line);
+      background: rgba(10, 10, 10, 0.78);
+      padding: 22px 18px;
+    }
+
+    .right-rail {
+      border-right: 0;
+      border-left: 1px solid var(--line);
+    }
+
+    .main {
+      min-width: 0;
+      padding: 22px 30px;
+    }
+
+    .panel,
+    .card,
+    .notice,
+    .metric,
+    .mobile-preview,
+    .table-shell {
+      border: 1px solid var(--line);
+      background: rgba(17, 17, 17, 0.72);
+    }
+
+    .panel {
+      margin-bottom: 22px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 43px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 14px;
+    }
+
+    .panel-head h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .panel-body {
+      padding: 14px;
+    }
+
+    .label {
+      margin: 0 0 14px;
+      color: var(--ink-faint);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view[data-active="true"] {
+      display: block;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-end;
+      margin-bottom: 22px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 31px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .section-head p {
+      margin: 9px 0 0;
+      color: var(--ink-faint);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .notice {
+      margin-bottom: 18px;
+      border-color: rgba(176, 200, 122, 0.36);
+      padding: 15px 16px;
+    }
+
+    .notice .label {
+      margin-bottom: 8px;
+      color: var(--famtec);
+    }
+
+    .notice p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 14px;
+      line-height: 1.48;
+    }
+
+    .instruction-panel {
+      display: none;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 18px;
+      border: 1px solid rgba(176, 200, 122, 0.56);
+      background: rgba(176, 200, 122, 0.055);
+      padding: 14px 16px;
+    }
+
+    body.instruction-mode .instruction-panel {
+      display: grid;
+    }
+
+    .instruction-copy {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      min-width: 0;
+    }
+
+    .instruction-step {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--famtec);
+      color: var(--famtec);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .instruction-copy strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .instruction-copy p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    body.instruction-mode [data-guide] {
+      border-color: rgba(176, 200, 122, 0.72);
+    }
+
+    body.instruction-mode [data-guide]::after {
+      content: attr(data-guide);
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      border: 1px solid rgba(176, 200, 122, 0.42);
+      color: var(--famtec);
+      background: #070707;
+      padding: 3px 7px;
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .run-strip {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 96px;
+      margin-bottom: 12px;
+      border: 1px solid var(--line-2);
+      background: #0c0c0c;
+    }
+
+    .run-strip input,
+    .search input {
+      min-width: 0;
+      border: 0;
+      color: var(--ink);
+      background: transparent;
+      outline: none;
+      padding: 0 16px;
+      font-family: var(--serif);
+      font-size: 18px;
+      font-style: italic;
+    }
+
+    .run-strip input {
+      min-height: 45px;
+    }
+
+    .run-strip button {
+      border: 0;
+      border-left: 1px solid var(--line-2);
+      color: #11130c;
+      background: var(--famtec);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 23px;
+      border: 1px solid var(--line-2);
+      color: var(--ink-faint);
+      background: transparent;
+      padding: 0 8px;
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+
+    .chip.good {
+      border-color: rgba(176, 200, 122, 0.45);
+      color: var(--famtec);
+    }
+
+    .chip.cyan {
+      border-color: rgba(143, 188, 176, 0.45);
+      color: var(--cyan);
+    }
+
+    .chip.warn {
+      border-color: rgba(199, 166, 90, 0.45);
+      color: var(--gold);
+    }
+
+    .chip.danger {
+      border-color: rgba(200, 112, 96, 0.45);
+      color: var(--warn);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    .card,
+    .metric,
+    .profile-button,
+    .row,
+    .profile-chip {
+      position: relative;
+    }
+
+    .card {
+      min-height: 145px;
+      padding: 14px;
+    }
+
+    .card .label {
+      margin-bottom: 10px;
+      color: var(--ink-faint);
+    }
+
+    .card h3,
+    .card h4 {
+      margin: 0 0 10px;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 21px;
+      font-weight: 600;
+      line-height: 1.12;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 14px;
+      line-height: 1.48;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .metric {
+      min-height: 90px;
+      padding: 14px;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--ink);
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .metric-label {
+      display: block;
+      margin-top: 7px;
+      color: var(--ink-faint);
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+
+    .terminal {
+      border: 1px solid var(--line-2);
+      background: #050505;
+      color: var(--ink-soft);
+      padding: 14px 16px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+
+    .terminal .ok {
+      color: var(--ok);
+    }
+
+    .terminal .faint {
+      color: var(--ink-faint);
+    }
+
+    .rows,
+    .profile-list,
+    .project-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .row,
+    .profile-chip {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      min-height: 45px;
+      border-bottom: 1px solid var(--line);
+      padding: 8px 0;
+    }
+
+    .row:last-child,
+    .profile-chip:last-child {
+      border-bottom: 0;
+    }
+
+    .row strong,
+    .profile-chip strong {
+      display: block;
+      color: var(--ink-soft);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .row span,
+    .profile-chip span,
+    .small {
+      color: var(--ink-faint);
+      font-size: 12px;
+    }
+
+    .command-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 30px;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 12px;
+    }
+
+    .command-row:last-child {
+      border-bottom: 0;
+    }
+
+    code {
+      color: var(--ink-soft);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .copy {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border: 1px solid var(--line-2);
+      color: var(--ink-faint);
+      background: transparent;
+    }
+
+    .copy:hover,
+    .copy[data-copied="true"] {
+      border-color: var(--famtec);
+      color: var(--famtec);
+    }
+
+    .copy svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .search-tools {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 178px;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .search,
+    .provider-filter {
+      min-height: 40px;
+      border: 1px solid var(--line-2);
+      background: #0c0c0c;
+    }
+
+    .search input {
+      width: 100%;
+      min-height: 38px;
+      font-size: 15px;
+    }
+
+    .provider-filter {
+      color: var(--ink-soft);
+      outline: none;
+      padding: 0 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .token-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .token-table th,
+    .token-table td {
+      height: 46px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 11px;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .token-table th {
+      color: var(--ink-faint);
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .token-table td {
+      color: var(--ink-soft);
+    }
+
+    .token-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .token-name {
+      color: var(--ink);
+      font-size: 12px;
+    }
+
+    .provider {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink-soft);
+    }
+
+    .provider-dot {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border: 1px solid rgba(143, 188, 176, 0.45);
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .profile-button {
+      width: 100%;
+      min-height: 74px;
+      border: 1px solid var(--line);
+      color: var(--ink-soft);
+      background: transparent;
+      padding: 12px;
+      text-align: left;
+    }
+
+    .profile-button[aria-selected="true"] {
+      border-color: rgba(176, 200, 122, 0.55);
+      background: rgba(176, 200, 122, 0.045);
+    }
+
+    .profile-button strong {
+      display: block;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .profile-button span {
+      display: block;
+      margin-top: 5px;
+      color: var(--ink-faint);
+      font-size: 12px;
+    }
+
+    .integration-steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .empty {
+      display: grid;
+      place-items: center;
+      min-height: 116px;
+      border: 1px dashed var(--line-2);
+      color: var(--ink-faint);
+      text-align: center;
+      padding: 18px;
+      font-size: 13px;
+    }
+
+    .mobile-preview {
+      min-height: 520px;
+      padding: 26px 20px;
+      background:
+        radial-gradient(circle at 50% 5%, rgba(143, 188, 176, 0.08), transparent 18rem),
+        rgba(12, 12, 12, 0.86);
+    }
+
+    .mobile-preview h4 {
+      margin: 0 0 18px;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .mobile-code {
+      display: inline-flex;
+      border: 1px solid rgba(143, 188, 176, 0.45);
+      color: var(--cyan);
+      padding: 8px 14px;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+    }
+
+    .mobile-question {
+      margin-top: 26px;
+      border-left: 3px solid var(--cyan);
+      padding-left: 18px;
+      color: var(--ink-soft);
+      font-family: var(--serif);
+      font-size: 23px;
+      font-style: italic;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1220px) {
+      .workspace {
+        grid-template-columns: 250px minmax(0, 1fr);
+      }
+
+      .right-rail {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 860px) {
+      .masthead {
+        min-height: 156px;
+      }
+
+      .brand,
+      .control-cluster {
+        position: static;
+        padding: 20px 18px 0;
+      }
+
+      .control-cluster {
+        justify-items: start;
+        padding-top: 12px;
+      }
+
+      .wordmark {
+        font-size: 26px;
+      }
+
+      .status-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .left-rail,
+      .right-rail {
+        border-right: 0;
+        border-left: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .main {
+        padding: 20px 18px;
+      }
+
+      .span-3,
+      .span-4,
+      .span-5,
+      .span-6,
+      .span-7,
+      .span-8 {
+        grid-column: span 12;
+      }
+
+      .integration-steps,
+      .split,
+      .search-tools {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .status-grid,
+      .metric-grid,
+      .right-rail {
+        grid-template-columns: 1fr;
+      }
+
+      .run-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .run-strip button {
+        min-height: 42px;
+        border-left: 0;
+        border-top: 1px solid var(--line-2);
+      }
+
+      .token-table th:nth-child(4),
+      .token-table td:nth-child(4) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <div class="brand">
+        <h1 class="wordmark" id="brand-wordmark">K E Y T <span class="accent">E</span> C</h1>
+        <p class="subtitle" id="brand-title">Local credential infrastructure - FAMTEC / runtime</p>
+      </div>
+
+      <div class="control-cluster">
+        <div class="build-line"><span id="clock">--:--:--</span> &nbsp; Build <span id="version-badge">v0.1.0</span> - local keychain - no cloud</div>
+        <div class="top-actions">
+          <button class="btn" type="button">KEYCHAIN</button>
+          <button class="btn" type="button">PROFILES</button>
+          <button class="btn learn-toggle" id="instruction-toggle" type="button" aria-pressed="false">Instruction Mode</button>
+          <button class="btn primary" type="button" data-copy-command="famtec add openai">+ Add Token</button>
+        </div>
+        <div class="access-line">Role
+          <select class="role-select" aria-label="Role">
+            <option>Developer</option>
+            <option>Admin</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <section class="status-grid" aria-label="Runtime status">
+      <div class="status-cell"><span><i class="dot"></i>KEYCHAIN</span><strong id="strip-keychain">checking</strong></div>
+      <div class="status-cell"><span><i class="dot"></i>PROFILES</span><strong id="strip-profiles">0 configured</strong></div>
+      <div class="status-cell"><span><i class="dot warn"></i>TOKENS</span><strong id="strip-tokens">0 attached</strong></div>
+      <div class="status-cell"><span><i class="dot info"></i>RUNTIME</span><strong id="strip-runtime">env injection</strong></div>
+      <div class="status-cell"><span><i class="dot"></i>SOURCE</span><strong>local machine</strong></div>
+      <div class="status-cell"><span><i class="dot"></i>PLATFORM</span><strong id="strip-platform">local</strong></div>
+    </section>
+
+    <nav class="module-tabs" aria-label="Sections">
+      <button class="tab" type="button" aria-selected="true" data-view-button="dashboard">Dashboard</button>
+      <button class="tab" type="button" aria-selected="false" data-view-button="tokens">Tokens</button>
+      <button class="tab" type="button" aria-selected="false" data-view-button="projects">Projects</button>
+      <button class="tab" type="button" aria-selected="false" data-view-button="github">GitHub Sync</button>
+      <button class="tab" type="button" aria-selected="false" data-view-button="settings">Settings</button>
+    </nav>
+
+    <section class="workspace">
+      <aside class="left-rail">
+        <p class="label">Vault Profiles</p>
+        <div class="profile-list" id="rail-profiles"></div>
+
+        <section class="panel" style="margin-top:22px;">
+          <div class="panel-head"><h3>Network Stats</h3><span class="chip good" id="profile-count-tag">0</span></div>
+          <div class="panel-body">
+            <div class="rows">
+              <div class="row"><div><strong>Token handles</strong><span>Attached to profiles</span></div><span id="token-count-rail">0</span></div>
+              <div class="row"><div><strong>GitHub sync</strong><span>Manual boundary</span></div><span>ready</span></div>
+              <div class="row"><div><strong>Data mode</strong><span>No cloud backend</span></div><span>local</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h3>Security Boundary</h3><span class="chip good">local</span></div>
+          <div class="panel-body">
+            <div class="rows">
+              <div class="row"><div><strong>No plaintext storage</strong><span>macOS Keychain service</span></div><span class="chip good">OK</span></div>
+              <div class="row"><div><strong>No secret logs</strong><span>values stay masked</span></div><span class="chip good">OK</span></div>
+              <div class="row"><div><strong>Runtime only</strong><span>ephemeral environment</span></div><span class="chip cyan">ENV</span></div>
+            </div>
+          </div>
+        </section>
+      </aside>
+
+      <main class="main">
+        <section class="section-head">
+          <div>
+            <h2 id="view-title">Dashboard</h2>
+            <p id="view-subtitle">Vault state, profiles, and runtime commands.</p>
+          </div>
+          <span class="chip good" id="keychain-status">checking</span>
+        </section>
+
+        <section class="instruction-panel" id="instruction-panel" aria-live="polite">
+          <div class="instruction-copy">
+            <span class="instruction-step" id="instruction-step">01</span>
+            <div>
+              <strong id="instruction-title">Start with the runtime loop</strong>
+              <p id="instruction-text">Add one provider key, create a project profile, attach the key, then run your app through the profile.</p>
+            </div>
+          </div>
+          <button class="btn" type="button" id="instruction-next">Next</button>
+        </section>
+
+        <section class="view" data-view="dashboard" data-active="true">
+          <section class="notice" data-guide="prototype boundary">
+            <p class="label">Prototype Integration Boundary</p>
+            <p>Keytec is shown as a local FAMTEC module for workflow testing. The vault stores provider handles in the OS keychain, maps them to project profiles, and injects them into runtime commands without writing a .env file.</p>
+          </section>
+
+          <div class="run-strip" data-guide="runtime command">
+            <input value="famtec run archai -- npm run dev" aria-label="Runtime command">
+            <button type="button" data-copy-command="famtec run archai -- npm run dev">Copy</button>
+          </div>
+          <div class="filters">
+            <span class="chip good">local only</span>
+            <span class="chip">no account</span>
+            <span class="chip cyan">keychain</span>
+            <span class="chip">runtime env</span>
+            <span class="chip warn">manual GitHub sync</span>
+          </div>
+
+          <div class="metric-grid">
+            <article class="metric" data-guide="token handles"><strong id="token-count">0</strong><span class="metric-label">Tokens secured</span></article>
+            <article class="metric" data-guide="profiles"><strong id="profile-count">0</strong><span class="metric-label">Projects configured</span></article>
+            <article class="metric"><strong id="integration-count">0</strong><span class="metric-label">Runtime checks</span></article>
+            <article class="metric"><strong>0</strong><span class="metric-label">Alerts</span></article>
+          </div>
+
+          <div class="grid">
+            <article class="card span-6" data-guide="vault workflow">
+              <p class="label">MVP Runtime Path</p>
+              <h3>Store once. Attach to project. Inject at runtime.</h3>
+              <p>The preferred command is intentionally short enough to beat a handwritten .env file in everyday work.</p>
+              <div class="terminal" style="margin-top:14px;">
+                <div>$ famtec add openai</div>
+                <div class="ok">OK token saved to keychain</div>
+                <div>$ famtec run my-app -- npm run dev</div>
+                <div class="ok">OK API keys injected</div>
+                <div class="faint">values masked, no file written</div>
+              </div>
+            </article>
+
+            <article class="card span-6" data-guide="activity">
+              <p class="label">Activity Ledger</p>
+              <div class="rows" id="activity-list"></div>
+            </article>
+
+            <article class="card span-4">
+              <p class="label">1. Store</p>
+              <h4>Provider handles</h4>
+              <p>Add keys once using provider names. The CLI normalises handles into environment variables.</p>
+            </article>
+            <article class="card span-4">
+              <p class="label">2. Attach</p>
+              <h4>Project profiles</h4>
+              <p>Profiles become the durable replacement for project-level .env files.</p>
+            </article>
+            <article class="card span-4">
+              <p class="label">3. Run</p>
+              <h4>Ephemeral injection</h4>
+              <p>The child process receives credentials in memory, then the reference is discarded.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" data-view="tokens">
+          <section class="notice" data-guide="token table">
+            <p class="label">Token Handles</p>
+            <p>This module confirms which provider handles exist. Real credential values must never render in the UI.</p>
+          </section>
+          <div class="search-tools">
+            <label class="search"><input id="token-search" type="search" placeholder="Search tokens, providers, projects..."></label>
+            <select class="provider-filter" id="provider-filter" aria-label="Provider filter"><option value="">All Providers</option></select>
+          </div>
+          <div class="table-shell" id="token-table-wrap"></div>
+        </section>
+
+        <section class="view" data-view="projects">
+          <section class="notice" data-guide="profiles">
+            <p class="label">Project Profiles</p>
+            <p>Profiles group token handles into runtime-ready bundles. One project profile can replace one local .env file.</p>
+          </section>
+          <div class="split">
+            <div class="project-list" id="project-list"></div>
+            <div class="panel">
+              <div class="panel-head"><h3 id="project-detail-title">Project</h3><button class="btn" type="button" data-copy-command="famtec run my-app -- npm run dev">Run Command</button></div>
+              <div class="panel-body"><div class="rows" id="project-detail"></div></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" data-view="github">
+          <section class="notice" data-guide="sync boundary">
+            <p class="label">GitHub Integration Boundary</p>
+            <p>Sync is explicit. Nothing leaves the local machine until a profile is intentionally pushed to GitHub Actions Secrets.</p>
+          </section>
+          <div class="integration-steps">
+            <article class="card"><p class="label">1. Connect</p><h4>GitHub token or app</h4><code>famtec github connect</code><div style="margin-top:12px;"><span class="chip good">manual</span></div></article>
+            <article class="card"><p class="label">2. Sync</p><h4>Actions secrets</h4><code>famtec github sync archai owner/repo</code><div style="margin-top:12px;"><span class="chip good">explicit</span></div></article>
+            <article class="card"><p class="label">3. Build</p><h4>Use in workflow</h4><code>${{ secrets.OPENAI_API_KEY }}</code><div style="margin-top:12px;"><span class="chip cyan">CI</span></div></article>
+          </div>
+          <div class="grid" style="margin-top:12px;">
+            <article class="card span-7">
+              <p class="label">Workflow YAML</p>
+              <div class="terminal">
+                <div>- name: Use FAMTEC secrets</div>
+                <div>&nbsp;&nbsp;env:</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}</div>
+                <div>&nbsp;&nbsp;run: npm run build</div>
+              </div>
+            </article>
+            <article class="card span-5">
+              <p class="label">Future Alert</p>
+              <h4>Provider key failed</h4>
+              <p>Health monitoring can route users back to local rotation commands without revealing secret values.</p>
+              <button class="btn" style="margin-top:16px;" type="button" data-copy-command="famtec add openai">Copy rotate command</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="view" data-view="settings">
+          <section class="notice" data-guide="local state">
+            <p class="label">Local State</p>
+            <p>Settings keeps paths inspectable while credential values remain hidden behind the operating system keychain.</p>
+          </section>
+          <div class="panel">
+            <div class="panel-head"><h3>Runtime Configuration</h3><span class="chip good">no account</span></div>
+            <div class="panel-body">
+              <div class="rows">
+                <div class="row"><div><strong>Project directory</strong><code id="project-dir"></code></div><span class="chip cyan">CLI</span></div>
+                <div class="row"><div><strong>Profile metadata</strong><code id="profile-file"></code></div><span class="chip">JSON</span></div>
+                <div class="row"><div><strong>Keychain service</strong><code id="service-name">famtec</code></div><span class="chip good" id="settings-keychain">checking</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="right-rail">
+        <section class="panel" data-guide="health">
+          <div class="panel-head"><h3>Token Health</h3><span class="chip good" id="health-summary">ready</span></div>
+          <div class="panel-body"><div class="rows" id="health-list"></div></div>
+        </section>
+
+        <section class="panel" data-guide="copy commands">
+          <div class="panel-head"><h3>Quick Commands</h3><span class="chip">copy</span></div>
+          <div id="commands"></div>
+        </section>
+
+        <section class="mobile-preview">
+          <div class="mobile-code">KEYTEC</div>
+          <h4 style="margin-top:26px;">Ask this runtime a question</h4>
+          <div class="run-strip" style="grid-template-columns:minmax(0,1fr) 78px;">
+            <input value="What keys does this project need?" aria-label="Question preview">
+            <button type="button">Ask</button>
+          </div>
+          <p class="mobile-question">I can explain which provider handles are attached to a profile without exposing their values.</p>
+        </section>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    const titles = {
+      dashboard: ["Dashboard", "Vault state, profiles, and runtime commands."],
+      tokens: ["Tokens", "Manage local token handles without revealing values."],
+      projects: ["Projects", "Group token handles into runtime profiles."],
+      github: ["GitHub Sync", "Explicit profile sync for GitHub Actions Secrets."],
+      settings: ["Settings", "Local paths and runtime checks."]
+    };
+
+    const instructionSteps = {
+      dashboard: {
+        step: "01",
+        title: "Start with the runtime loop",
+        text: "Add one provider key, create a project profile, attach the key, then run the app through that profile.",
+        next: "tokens"
+      },
+      tokens: {
+        step: "02",
+        title: "Token handles stay masked",
+        text: "The token table confirms which provider handles exist. It must never show the real credential value.",
+        next: "projects"
+      },
+      projects: {
+        step: "03",
+        title: "Profiles replace project .env files",
+        text: "A profile is the set of provider handles a project needs when the runtime command starts.",
+        next: "github"
+      },
+      github: {
+        step: "04",
+        title: "Sync is deliberate",
+        text: "Nothing leaves the machine unless the user explicitly syncs a profile into GitHub Actions Secrets.",
+        next: "settings"
+      },
+      settings: {
+        step: "05",
+        title: "Local state stays inspectable",
+        text: "Settings shows readiness and local metadata paths while secret values remain hidden.",
+        next: "dashboard"
+      }
+    };
+
+    const state = {
+      profiles: [],
+      commands: [],
+      tokens: [],
+      selectedProject: "",
+      activeView: "dashboard",
+      instructionMode: localStorage.getItem("keytec-instruction-mode") === "true"
+    };
+
+    const instructionToggle = document.getElementById("instruction-toggle");
+    document.body.classList.toggle("instruction-mode", state.instructionMode);
+    instructionToggle.setAttribute("aria-pressed", String(state.instructionMode));
+    updateInstructionPanel();
+    updateClock();
+    window.setInterval(updateClock, 1000);
+
+    document.querySelectorAll("[data-view-button]").forEach((button) => {
+      button.addEventListener("click", () => activateView(button.dataset.viewButton));
+    });
+
+    instructionToggle.addEventListener("click", () => {
+      state.instructionMode = !state.instructionMode;
+      document.body.classList.toggle("instruction-mode", state.instructionMode);
+      instructionToggle.setAttribute("aria-pressed", String(state.instructionMode));
+      localStorage.setItem("keytec-instruction-mode", String(state.instructionMode));
+      updateInstructionPanel();
+    });
+
+    document.getElementById("instruction-next").addEventListener("click", () => {
+      activateView(instructionSteps[state.activeView].next);
+    });
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-copy-command]");
+      if (!button) return;
+      navigator.clipboard?.writeText(button.dataset.copyCommand).catch(() => {});
+      button.dataset.copied = "true";
+      window.setTimeout(() => {
+        delete button.dataset.copied;
+      }, 900);
+    });
+
+    document.getElementById("token-search").addEventListener("input", renderTokenTable);
+    document.getElementById("provider-filter").addEventListener("change", renderTokenTable);
+
+    fetch("/api/status")
+      .then((response) => response.json())
+      .then((payload) => hydrate(payload))
+      .catch(() => hydrate(getFallbackPayload()));
+
+    function hydrate(payload) {
+      state.profiles = payload.profiles || [];
+      state.commands = payload.commands || [];
+      state.tokens = buildTokens(state.profiles);
+      state.selectedProject = state.profiles[0]?.name || "";
+      renderStatus(payload);
+    }
+
+    function activateView(view) {
+      state.activeView = view;
+      document.querySelectorAll("[data-view-button]").forEach((item) => {
+        item.setAttribute("aria-selected", item.dataset.viewButton === view ? "true" : "false");
+      });
+      document.querySelectorAll("[data-view]").forEach((section) => {
+        section.dataset.active = section.dataset.view === view ? "true" : "false";
+      });
+      document.getElementById("view-title").textContent = titles[view][0];
+      document.getElementById("view-subtitle").textContent = titles[view][1];
+      updateInstructionPanel();
+    }
+
+    function updateInstructionPanel() {
+      const guide = instructionSteps[state.activeView];
+      document.getElementById("instruction-step").textContent = guide.step;
+      document.getElementById("instruction-title").textContent = guide.title;
+      document.getElementById("instruction-text").textContent = guide.text;
+    }
+
+    function updateClock() {
+      document.getElementById("clock").textContent = new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+    }
+
+    function getFallbackPayload() {
+      return {
+        app: "Keytec API Wallet",
+        service: "famtec",
+        projectDir: "Prototype preview",
+        platform: "darwin",
+        version: "0.1.0",
+        cliReady: true,
+        keychainReady: true,
+        profilesPath: "~/.famtec/profiles.json",
+        profiles: [
+          { name: "archai", providers: ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"] },
+          { name: "famtec-exchange", providers: ["OPENAI_API_KEY", "GITHUB_TOKEN"] },
+          { name: "website", providers: ["SUPABASE_ANON_KEY"] }
+        ],
+        commands: [
+          "famtec add openai",
+          "famtec profile create archai",
+          "famtec profile attach archai openai",
+          "famtec run archai -- npm run dev",
+          "famtec github sync archai owner/repo"
+        ]
+      };
+    }
+
+    function renderStatus(payload) {
+      const appName = payload.app || "Keytec API Wallet";
+      const version = payload.version || "0.1.0";
+      const keychainReady = Boolean(payload.keychainReady);
+
+      document.title = appName;
+      document.getElementById("brand-title").textContent = `${appName} - local credential infrastructure`;
+      document.getElementById("version-badge").textContent = `v${version}`;
+      document.getElementById("token-count").textContent = state.tokens.length;
+      document.getElementById("profile-count").textContent = state.profiles.length;
+      document.getElementById("integration-count").textContent = keychainReady ? 3 : 2;
+      document.getElementById("profile-count-tag").textContent = state.profiles.length;
+      document.getElementById("token-count-rail").textContent = state.tokens.length;
+      document.getElementById("strip-keychain").textContent = keychainReady ? "ready" : "check required";
+      document.getElementById("strip-profiles").textContent = `${state.profiles.length} configured`;
+      document.getElementById("strip-tokens").textContent = `${state.tokens.length} attached`;
+      document.getElementById("strip-runtime").textContent = payload.cliReady ? "env injection ready" : "CLI check";
+      document.getElementById("strip-platform").textContent = payload.platform || "local";
+      document.getElementById("keychain-status").textContent = keychainReady ? "keychain ready" : "keychain check";
+      document.getElementById("keychain-status").className = keychainReady ? "chip good" : "chip danger";
+      document.getElementById("settings-keychain").textContent = keychainReady ? "ready" : "check";
+      document.getElementById("settings-keychain").className = keychainReady ? "chip good" : "chip danger";
+      document.getElementById("project-dir").textContent = payload.projectDir || "";
+      document.getElementById("profile-file").textContent = payload.profilesPath || "";
+      document.getElementById("service-name").textContent = payload.service || "famtec";
+
+      renderProfileRail();
+      renderActivity(payload);
+      renderHealth(keychainReady);
+      renderCommands();
+      renderTokenControls();
+      renderTokenTable();
+      renderProjects();
+    }
+
+    function buildTokens(profiles) {
+      const tokenMap = new Map();
+      profiles.forEach((profile) => {
+        (profile.providers || []).forEach((provider) => {
+          if (!tokenMap.has(provider)) {
+            tokenMap.set(provider, {
+              name: provider,
+              provider: providerLabel(provider),
+              status: "Healthy",
+              project: profile.name,
+              lastUsed: "local"
+            });
+          }
+        });
+      });
+      return [...tokenMap.values()];
+    }
+
+    function renderProfileRail() {
+      const target = document.getElementById("rail-profiles");
+      if (!state.profiles.length) {
+        target.innerHTML = `<div class="empty">No profiles configured yet.</div>`;
+        return;
+      }
+      target.innerHTML = state.profiles.map((profile) => `
+        <div class="profile-chip">
+          <div><strong>${escapeHtml(profile.name)}</strong><span>${profile.providers.length} handles</span></div>
+          <span class="chip good">ready</span>
+        </div>
+      `).join("");
+    }
+
+    function renderActivity(payload) {
+      const activity = [
+        state.profiles.length ? ["profile index", `${state.profiles.length} profiles configured`, "now"] : ["vault", "Waiting for first profile", "now"],
+        ["keychain", payload.keychainReady ? "macOS Keychain ready" : "Keychain check required", "local"],
+        ["runtime", payload.cliReady ? "Injection command available" : "CLI path check required", "local"],
+        ["github sync", "Manual sync command ready", "explicit"]
+      ];
+      document.getElementById("activity-list").innerHTML = activity.map(([title, detail, time]) => `
+        <div class="row">
+          <div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(detail)}</span></div>
+          <span class="chip">${escapeHtml(time)}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderHealth(keychainReady) {
+      const health = state.tokens.length
+        ? state.tokens.map((token) => [token.provider, keychainReady ? "Healthy" : "Check", token.name])
+        : [["OpenAI", "Ready", "add token"], ["Anthropic", "Ready", "add token"], ["GitHub", "Ready", "add token"]];
+      document.getElementById("health-summary").textContent = state.tokens.length ? "tracked" : "ready";
+      document.getElementById("health-list").innerHTML = health.map(([name, status, note]) => `
+        <div class="row">
+          <div><strong>${escapeHtml(name)}</strong><span>${escapeHtml(note)}</span></div>
+          <span class="chip ${status === "Healthy" || status === "Ready" ? "good" : "danger"}">${escapeHtml(status)}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderCommands() {
+      const target = document.getElementById("commands");
+      const commands = state.commands.length ? state.commands : getFallbackPayload().commands;
+      target.innerHTML = commands.map((command) => `
+        <div class="command-row">
+          <code>${escapeHtml(command)}</code>
+          <button class="copy" type="button" data-copy-command="${escapeAttribute(command)}" title="Copy command">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 8h11v11H8V8Z"/><path d="M5 16H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
+          </button>
+        </div>
+      `).join("");
+    }
+
+    function renderTokenControls() {
+      const providers = [...new Set(state.tokens.map((token) => token.provider))];
+      const select = document.getElementById("provider-filter");
+      select.innerHTML = `<option value="">All Providers</option>${providers.map((provider) => `<option>${escapeHtml(provider)}</option>`).join("")}`;
+    }
+
+    function renderTokenTable() {
+      const query = document.getElementById("token-search").value.toLowerCase();
+      const filter = document.getElementById("provider-filter").value;
+      const tokens = state.tokens.filter((token) => {
+        const matchesQuery = !query || token.name.toLowerCase().includes(query) || token.provider.toLowerCase().includes(query);
+        const matchesProvider = !filter || token.provider === filter;
+        return matchesQuery && matchesProvider;
+      });
+      const target = document.getElementById("token-table-wrap");
+      if (!tokens.length) {
+        target.innerHTML = `<div class="empty">No token handles attached yet.</div>`;
+        return;
+      }
+      target.innerHTML = `
+        <table class="token-table">
+          <thead><tr><th>Name</th><th>Provider</th><th>Status</th><th>Last Used</th><th></th></tr></thead>
+          <tbody>
+            ${tokens.map((token) => `
+              <tr>
+                <td><span class="token-name">${escapeHtml(token.name)}</span></td>
+                <td><span class="provider"><span class="provider-dot">${escapeHtml(token.provider.slice(0, 1))}</span>${escapeHtml(token.provider)}</span></td>
+                <td><span class="chip good">${escapeHtml(token.status)}</span></td>
+                <td>${escapeHtml(token.lastUsed)}</td>
+                <td><button class="copy" type="button" title="Copy env command" data-copy-command="famtec env ${escapeAttribute(token.project)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function renderProjects() {
+      const list = document.getElementById("project-list");
+      if (!state.profiles.length) {
+        list.innerHTML = `<div class="empty">No projects yet.</div>`;
+        document.getElementById("project-detail-title").textContent = "Project";
+        document.getElementById("project-detail").innerHTML = `<div class="empty">Create a profile to attach token handles.</div>`;
+        return;
+      }
+
+      list.innerHTML = state.profiles.map((profile) => `
+        <button class="profile-button" type="button" aria-selected="${profile.name === state.selectedProject ? "true" : "false"}" data-project="${escapeAttribute(profile.name)}">
+          <strong>${escapeHtml(profile.name)}</strong>
+          <span>${profile.providers.length} token handles</span>
+        </button>
+      `).join("");
+
+      list.querySelectorAll("[data-project]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.selectedProject = button.dataset.project;
+          renderProjects();
+        });
+      });
+
+      const selected = state.profiles.find((profile) => profile.name === state.selectedProject) || state.profiles[0];
+      document.getElementById("project-detail-title").textContent = selected.name;
+      document.getElementById("project-detail").innerHTML = selected.providers.length
+        ? selected.providers.map((provider) => `
+          <div class="row">
+            <div><strong>${escapeHtml(provider)}</strong><span>${escapeHtml(providerLabel(provider))}</span></div>
+            <span class="chip good">Healthy</span>
+          </div>
+        `).join("")
+        : `<div class="empty">No token handles attached.</div>`;
+    }
+
+    function providerLabel(provider) {
+      const clean = String(provider).replace(/_API_KEY$|_TOKEN$/g, "").replace(/_/g, " ").toLowerCase();
+      return clean.replace(/\b\w/g, (letter) => letter.toUpperCase());
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&#039;"
+      })[char]);
+    }
+
+    function escapeAttribute(value) {
+      return escapeHtml(value).replace(/`/g, "&#096;");
+    }
+  </script>
+</body>
+</html>

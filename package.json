@@ -1,0 +1,30 @@
+{
+  "name": "keytec-api-wallet",
+  "version": "0.1.0",
+  "description": "Local-first API credential wallet and runtime injection prototype.",
+  "type": "module",
+  "bin": {
+    "famtec": "./bin/famtec.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test tests/*.test.js",
+    "check": "npm run build && npm test"
+  },
+  "keywords": [
+    "secrets",
+    "keychain",
+    "vault",
+    "cli",
+    "env"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
