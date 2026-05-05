@@ -81,6 +81,7 @@ tsconfig.json
 ```bash
 famtec add <provider>
 famtec get <provider>
+famtec list
 famtec remove <provider>
 ```
 
@@ -165,7 +166,7 @@ The server exposes:
 /index.html
 ```
 
-The dashboard reads local status only. It does not expose secret values.
+The dashboard reads local status only. It does not expose secret values. It surfaces token handles from local profile metadata only and does not enumerate Keychain service entries.
 
 The UI has been styled to follow the ARCHAI/FAMTEC visual system:
 

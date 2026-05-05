@@ -1045,10 +1045,10 @@
       <div class="control-cluster">
         <div class="build-line"><span id="clock">--:--:--</span> &nbsp; Build <span id="version-badge">v0.1.0</span> - local keychain - no cloud</div>
         <div class="top-actions">
-          <button class="btn" type="button">KEYCHAIN</button>
-          <button class="btn" type="button">PROFILES</button>
+          <button class="btn" id="jump-keychain" type="button">KEYCHAIN</button>
+          <button class="btn" id="jump-profiles" type="button">PROFILES</button>
           <button class="btn learn-toggle" id="instruction-toggle" type="button" aria-pressed="false">Instruction Mode</button>
-          <button class="btn primary" type="button" data-copy-command="famtec add openai">+ Add Token</button>
+          <button class="btn primary" type="button" data-copy-command="famtec add together">+ Add Token</button>
         </div>
         <div class="access-line">Role
           <select class="role-select" aria-label="Role">
@@ -1131,8 +1131,8 @@
           </section>
 
           <div class="run-strip" data-guide="runtime command">
-            <input value="famtec run archai -- npm run dev" aria-label="Runtime command">
-            <button type="button" data-copy-command="famtec run archai -- npm run dev">Copy</button>
+            <input id="runtime-command" value="famtec run openclaw -- npm run dev" aria-label="Runtime command">
+            <button id="runtime-copy" type="button" data-copy-command="famtec run openclaw -- npm run dev">Copy</button>
           </div>
           <div class="filters">
             <span class="chip good">local only</span>
@@ -1155,9 +1155,9 @@
               <h3>Store once. Attach to project. Inject at runtime.</h3>
               <p>The preferred command is intentionally short enough to beat a handwritten .env file in everyday work.</p>
               <div class="terminal" style="margin-top:14px;">
-                <div>$ famtec add openai</div>
+                <div>$ famtec add together</div>
                 <div class="ok">OK token saved to keychain</div>
-                <div>$ famtec run my-app -- npm run dev</div>
+                <div>$ famtec run openclaw -- npm run dev</div>
                 <div class="ok">OK API keys injected</div>
                 <div class="faint">values masked, no file written</div>
               </div>
@@ -1189,7 +1189,7 @@
         <section class="view" data-view="tokens">
           <section class="notice" data-guide="token table">
             <p class="label">Token Handles</p>
-            <p>This module confirms which provider handles exist. Real credential values must never render in the UI.</p>
+            <p>This module shows which provider handles are attached to local profiles. Real credential values never render in the UI, and the dashboard does not enumerate Keychain items.</p>
           </section>
           <div class="search-tools">
             <label class="search"><input id="token-search" type="search" placeholder="Search tokens, providers, projects..."></label>
@@ -1206,7 +1206,7 @@
           <div class="split">
             <div class="project-list" id="project-list"></div>
             <div class="panel">
-              <div class="panel-head"><h3 id="project-detail-title">Project</h3><button class="btn" type="button" data-copy-command="famtec run my-app -- npm run dev">Run Command</button></div>
+              <div class="panel-head"><h3 id="project-detail-title">Project</h3><button class="btn" id="project-run-command" type="button" data-copy-command="famtec run openclaw -- npm run dev">Run Command</button></div>
               <div class="panel-body"><div class="rows" id="project-detail"></div></div>
             </div>
           </div>
@@ -1219,8 +1219,8 @@
           </section>
           <div class="integration-steps">
             <article class="card"><p class="label">1. Connect</p><h4>GitHub token or app</h4><code>famtec github connect</code><div style="margin-top:12px;"><span class="chip good">manual</span></div></article>
-            <article class="card"><p class="label">2. Sync</p><h4>Actions secrets</h4><code>famtec github sync archai owner/repo</code><div style="margin-top:12px;"><span class="chip good">explicit</span></div></article>
-            <article class="card"><p class="label">3. Build</p><h4>Use in workflow</h4><code>${{ secrets.OPENAI_API_KEY }}</code><div style="margin-top:12px;"><span class="chip cyan">CI</span></div></article>
+            <article class="card"><p class="label">2. Sync</p><h4>Actions secrets</h4><code>famtec github sync openclaw owner/repo</code><div style="margin-top:12px;"><span class="chip good">explicit</span></div></article>
+            <article class="card"><p class="label">3. Build</p><h4>Use in workflow</h4><code>${{ secrets.TOGETHER_API_KEY }}</code><div style="margin-top:12px;"><span class="chip cyan">CI</span></div></article>
           </div>
           <div class="grid" style="margin-top:12px;">
             <article class="card span-7">
@@ -1228,8 +1228,8 @@
               <div class="terminal">
                 <div>- name: Use FAMTEC secrets</div>
                 <div>&nbsp;&nbsp;env:</div>
-                <div>&nbsp;&nbsp;&nbsp;&nbsp;OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}</div>
-                <div>&nbsp;&nbsp;&nbsp;&nbsp;ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}</div>
+                <div>&nbsp;&nbsp;&nbsp;&nbsp;DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}</div>
                 <div>&nbsp;&nbsp;run: npm run build</div>
               </div>
             </article>
@@ -1237,7 +1237,7 @@
               <p class="label">Future Alert</p>
               <h4>Provider key failed</h4>
               <p>Health monitoring can route users back to local rotation commands without revealing secret values.</p>
-              <button class="btn" style="margin-top:16px;" type="button" data-copy-command="famtec add openai">Copy rotate command</button>
+              <button class="btn" style="margin-top:16px;" type="button" data-copy-command="famtec add together">Copy rotate command</button>
             </article>
           </div>
         </section>
@@ -1275,10 +1275,10 @@
           <div class="mobile-code">KEYTEC</div>
           <h4 style="margin-top:26px;">Ask this runtime a question</h4>
           <div class="run-strip" style="grid-template-columns:minmax(0,1fr) 78px;">
-            <input value="What keys does this project need?" aria-label="Question preview">
-            <button type="button">Ask</button>
+            <input id="mobile-question-input" value="What keys does this project need?" aria-label="Question preview">
+            <button id="mobile-ask" type="button">Ask</button>
           </div>
-          <p class="mobile-question">I can explain which provider handles are attached to a profile without exposing their values.</p>
+          <p class="mobile-question" id="mobile-answer">I can explain which provider handles are attached to a profile without exposing their values.</p>
         </section>
       </aside>
     </section>
@@ -1352,6 +1352,9 @@
       button.addEventListener("click", () => activateView(button.dataset.viewButton));
     });
 
+    document.getElementById("jump-keychain").addEventListener("click", () => activateView("tokens"));
+    document.getElementById("jump-profiles").addEventListener("click", () => activateView("projects"));
+
     instructionToggle.addEventListener("click", () => {
       state.instructionMode = !state.instructionMode;
       document.body.classList.toggle("instruction-mode", state.instructionMode);
@@ -1376,6 +1379,13 @@
 
     document.getElementById("token-search").addEventListener("input", renderTokenTable);
     document.getElementById("provider-filter").addEventListener("change", renderTokenTable);
+    document.getElementById("mobile-ask").addEventListener("click", answerMobileQuestion);
+    document.getElementById("mobile-question-input").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") answerMobileQuestion();
+    });
+    document.getElementById("runtime-command").addEventListener("input", (event) => {
+      document.getElementById("runtime-copy").dataset.copyCommand = event.target.value;
+    });
 
     if (params.get("demo") === "1") {
       hydrate(getFallbackPayload());
@@ -1389,7 +1399,7 @@
     function hydrate(payload) {
       state.profiles = payload.profiles || [];
       state.commands = payload.commands || [];
-      state.tokens = buildTokens(state.profiles);
+      state.tokens = normalizeTokens(payload.tokens || [], state.profiles);
       state.selectedProject = state.profiles[0]?.name || "";
       renderStatus(payload);
       activateView(state.activeView);
@@ -1434,16 +1444,25 @@
         keychainReady: true,
         profilesPath: "~/.famtec/profiles.json",
         profiles: [
+          { name: "openclaw", providers: ["TOGETHER_API_KEY", "DEEPSEEK_API_KEY"] },
           { name: "archai", providers: ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"] },
-          { name: "famtec-exchange", providers: ["OPENAI_API_KEY", "GITHUB_TOKEN"] },
-          { name: "website", providers: ["SUPABASE_ANON_KEY"] }
+          { name: "famtec-exchange", providers: ["OPENAI_API_KEY", "GITHUB_TOKEN"] }
+        ],
+        tokens: [
+          { provider: "TOGETHER_API_KEY", attachedProfiles: ["openclaw"], storedInKeychain: true },
+          { provider: "DEEPSEEK_API_KEY", attachedProfiles: ["openclaw"], storedInKeychain: true },
+          { provider: "OPENAI_API_KEY", attachedProfiles: ["archai", "famtec-exchange"], storedInKeychain: true },
+          { provider: "ANTHROPIC_API_KEY", attachedProfiles: ["archai"], storedInKeychain: false },
+          { provider: "GITHUB_TOKEN", attachedProfiles: ["famtec-exchange"], storedInKeychain: true }
         ],
         commands: [
-          "famtec add openai",
-          "famtec profile create archai",
-          "famtec profile attach archai openai",
-          "famtec run archai -- npm run dev",
-          "famtec github sync archai owner/repo"
+          "famtec add together",
+          "famtec add deepseek",
+          "famtec profile create openclaw",
+          "famtec profile attach openclaw together",
+          "famtec profile attach openclaw deepseek",
+          "famtec run openclaw -- npm run dev",
+          "famtec list"
         ]
       };
     }
@@ -1452,18 +1471,20 @@
       const appName = payload.app || "Keytec API Wallet";
       const version = payload.version || "0.1.0";
       const keychainReady = Boolean(payload.keychainReady);
+      const trackedTokenCount = state.tokens.length;
+      const attachedTokenCount = state.tokens.filter((token) => token.attachedProfiles.length).length;
 
       document.title = appName;
       document.getElementById("brand-title").textContent = `${appName} - local credential infrastructure`;
       document.getElementById("version-badge").textContent = `v${version}`;
-      document.getElementById("token-count").textContent = state.tokens.length;
+      document.getElementById("token-count").textContent = trackedTokenCount;
       document.getElementById("profile-count").textContent = state.profiles.length;
-      document.getElementById("integration-count").textContent = keychainReady ? 3 : 2;
+      document.getElementById("integration-count").textContent = attachedTokenCount;
       document.getElementById("profile-count-tag").textContent = state.profiles.length;
-      document.getElementById("token-count-rail").textContent = state.tokens.length;
+      document.getElementById("token-count-rail").textContent = trackedTokenCount;
       document.getElementById("strip-keychain").textContent = keychainReady ? "ready" : "check required";
       document.getElementById("strip-profiles").textContent = `${state.profiles.length} configured`;
-      document.getElementById("strip-tokens").textContent = `${state.tokens.length} attached`;
+      document.getElementById("strip-tokens").textContent = `${trackedTokenCount} handles tracked`;
       document.getElementById("strip-runtime").textContent = payload.cliReady ? "env injection ready" : "CLI check";
       document.getElementById("strip-platform").textContent = payload.platform || "local";
       document.getElementById("keychain-status").textContent = keychainReady ? "keychain ready" : "keychain check";
@@ -1481,24 +1502,48 @@
       renderTokenControls();
       renderTokenTable();
       renderProjects();
+      syncRuntimeCommand();
+      answerMobileQuestion(true);
     }
 
-    function buildTokens(profiles) {
-      const tokenMap = new Map();
-      profiles.forEach((profile) => {
+    function normalizeTokens(tokens, profiles) {
+      const profileMap = new Map((profiles || []).map((profile) => [profile.name, profile]));
+      const profileDerived = [];
+
+      (profiles || []).forEach((profile) => {
         (profile.providers || []).forEach((provider) => {
-          if (!tokenMap.has(provider)) {
-            tokenMap.set(provider, {
-              name: provider,
-              provider: providerLabel(provider),
-              status: "Healthy",
-              project: profile.name,
-              lastUsed: "local"
-            });
-          }
+          profileDerived.push({
+            provider,
+            attachedProfiles: [profile.name],
+            storedInKeychain: undefined
+          });
         });
       });
-      return [...tokenMap.values()];
+
+      const tokenMap = new Map();
+      [...profileDerived, ...(tokens || [])].forEach((token) => {
+        const key = String(token.provider || "");
+        if (!key) return;
+        const current = tokenMap.get(key) || {
+          name: key,
+          provider: providerLabel(key),
+          attachedProfiles: [],
+          storedInKeychain: undefined
+        };
+        current.storedInKeychain = current.storedInKeychain || token.storedInKeychain === true;
+        current.attachedProfiles = [...new Set([
+          ...current.attachedProfiles,
+          ...((token.attachedProfiles || []).filter((name) => profileMap.has(name)))
+        ])].sort((a, b) => a.localeCompare(b));
+        current.status = current.attachedProfiles.length
+          ? (current.storedInKeychain ? "Ready" : "Attached")
+          : "Unattached";
+        current.lastUsed = current.attachedProfiles[0] || "unattached";
+        current.project = current.attachedProfiles[0] || "";
+        tokenMap.set(key, current);
+      });
+
+      return [...tokenMap.values()].sort((a, b) => a.name.localeCompare(b.name));
     }
 
     function renderProfileRail() {
@@ -1532,13 +1577,13 @@
 
     function renderHealth(keychainReady) {
       const health = state.tokens.length
-        ? state.tokens.map((token) => [token.provider, keychainReady ? "Healthy" : "Check", token.name])
-        : [["OpenAI", "Ready", "add token"], ["Anthropic", "Ready", "add token"], ["GitHub", "Ready", "add token"]];
-      document.getElementById("health-summary").textContent = state.tokens.length ? "tracked" : "ready";
+        ? state.tokens.map((token) => [token.provider, token.status, token.storedInKeychain ? token.attachedProfiles.join(", ") : `${token.attachedProfiles.join(", ")} · profile handle only`])
+        : [["Together", "Add", "famtec add together"], ["DeepSeek", "Add", "famtec add deepseek"], ["GitHub", "Optional", "famtec github connect"]];
+      document.getElementById("health-summary").textContent = state.tokens.length ? "tracked" : "empty";
       document.getElementById("health-list").innerHTML = health.map(([name, status, note]) => `
         <div class="row">
           <div><strong>${escapeHtml(name)}</strong><span>${escapeHtml(note)}</span></div>
-          <span class="chip ${status === "Healthy" || status === "Ready" ? "good" : "danger"}">${escapeHtml(status)}</span>
+          <span class="chip ${status === "Ready" || status === "Healthy" ? "good" : status === "Attached" || status === "Unattached" || status === "Optional" || status === "Add" ? "warn" : "danger"}">${escapeHtml(status)}</span>
         </div>
       `).join("");
     }
@@ -1566,7 +1611,7 @@
       const query = document.getElementById("token-search").value.toLowerCase();
       const filter = document.getElementById("provider-filter").value;
       const tokens = state.tokens.filter((token) => {
-        const matchesQuery = !query || token.name.toLowerCase().includes(query) || token.provider.toLowerCase().includes(query);
+        const matchesQuery = !query || token.name.toLowerCase().includes(query) || token.provider.toLowerCase().includes(query) || token.attachedProfiles.join(" ").toLowerCase().includes(query);
         const matchesProvider = !filter || token.provider === filter;
         return matchesQuery && matchesProvider;
       });
@@ -1577,15 +1622,15 @@
       }
       target.innerHTML = `
         <table class="token-table">
-          <thead><tr><th>Name</th><th>Provider</th><th>Status</th><th>Last Used</th><th></th></tr></thead>
+          <thead><tr><th>Name</th><th>Provider</th><th>Status</th><th>Attached</th><th></th></tr></thead>
           <tbody>
             ${tokens.map((token) => `
               <tr>
                 <td><span class="token-name">${escapeHtml(token.name)}</span></td>
                 <td><span class="provider"><span class="provider-dot">${escapeHtml(token.provider.slice(0, 1))}</span>${escapeHtml(token.provider)}</span></td>
-                <td><span class="chip good">${escapeHtml(token.status)}</span></td>
-                <td>${escapeHtml(token.lastUsed)}</td>
-                <td><button class="copy" type="button" title="Copy env command" data-copy-command="famtec env ${escapeAttribute(token.project)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+                <td><span class="chip ${token.status === "Ready" ? "good" : token.status === "Attached" || token.status === "Unattached" ? "warn" : "danger"}">${escapeHtml(token.status)}</span></td>
+                <td>${escapeHtml(token.attachedProfiles.length ? token.attachedProfiles.join(", ") : "none")}</td>
+                <td><button class="copy" type="button" title="Copy inspect command" data-copy-command="${escapeAttribute(token.project ? `famtec env ${token.project}` : `famtec get ${token.name}`)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
               </tr>
             `).join("")}
           </tbody>
@@ -1613,19 +1658,41 @@
         button.addEventListener("click", () => {
           state.selectedProject = button.dataset.project;
           renderProjects();
+          answerMobileQuestion(true);
         });
       });
 
       const selected = state.profiles.find((profile) => profile.name === state.selectedProject) || state.profiles[0];
       document.getElementById("project-detail-title").textContent = selected.name;
+      const runCommand = `famtec run ${selected.name} -- npm run dev`;
+      document.getElementById("project-run-command").dataset.copyCommand = runCommand;
       document.getElementById("project-detail").innerHTML = selected.providers.length
         ? selected.providers.map((provider) => `
           <div class="row">
             <div><strong>${escapeHtml(provider)}</strong><span>${escapeHtml(providerLabel(provider))}</span></div>
-            <span class="chip good">Healthy</span>
+            <span class="chip ${state.tokens.find((token) => token.name === provider)?.status === "Ready" ? "good" : "warn"}">${escapeHtml(state.tokens.find((token) => token.name === provider)?.status || "Attached")}</span>
           </div>
         `).join("")
         : `<div class="empty">No token handles attached.</div>`;
+      syncRuntimeCommand();
+    }
+
+    function syncRuntimeCommand() {
+      const fallbackProfile = state.selectedProject || state.profiles[0]?.name || "openclaw";
+      const command = `famtec run ${fallbackProfile} -- npm run dev`;
+      document.getElementById("runtime-command").value = command;
+      document.getElementById("runtime-copy").dataset.copyCommand = command;
+    }
+
+    function answerMobileQuestion(silent = false) {
+      const selected = state.profiles.find((profile) => profile.name === state.selectedProject) || state.profiles[0];
+      const answer = !selected
+        ? "Start by creating a profile, then I can explain which provider handles it needs."
+        : !selected.providers.length
+          ? `${selected.name} exists, but it does not have any token handles attached yet.`
+          : `${selected.name} needs ${selected.providers.join(", ")}. I can show the handle names, but never the secret values.`;
+      document.getElementById("mobile-answer").textContent = answer;
+      if (!silent) activateView("projects");
     }
 
     function providerLabel(provider) {

@@ -50,10 +50,13 @@ node bin/famtec.js help
 ## Core Workflow
 
 ```sh
-famtec add openai
-famtec profile create my-app
-famtec profile attach my-app openai
-famtec run my-app -- npm run dev
+famtec add together
+famtec add deepseek
+famtec profile create openclaw
+famtec profile attach openclaw together
+famtec profile attach openclaw deepseek
+famtec list
+famtec run openclaw -- npm run dev
 ```
 
 The `--` delimiter is recommended because it makes the boundary between Keytec/FAMTEC arguments and your application command explicit. `famtec run my-app npm run dev` is also accepted for quick use.
@@ -62,13 +65,19 @@ Provider names are normalized to environment variable names. For example:
 
 - `openai` becomes `OPENAI_API_KEY`
 - `anthropic` becomes `ANTHROPIC_API_KEY`
+- `together` becomes `TOGETHER_API_KEY`
+- `deepseek` becomes `DEEPSEEK_API_KEY`
 - `GITHUB_TOKEN` stays `GITHUB_TOKEN`
 
 ## Commands
 
+`famtec list` reports token handles attached to local profiles. It does not enumerate the macOS Keychain.
+
+
 ```sh
 famtec add <provider>
 famtec get <provider>
+famtec list
 famtec remove <provider>
 
 famtec profile create <name>

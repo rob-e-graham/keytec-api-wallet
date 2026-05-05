@@ -1,14 +1,14 @@
 import { createServer } from "node:http";
 import { existsSync, readFileSync } from "node:fs";
-import { dirname, extname, join } from "node:path";
+import { dirname, extname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { homedir, platform } from "node:os";
-import { spawnSync } from "node:child_process";
 
 const root = dirname(fileURLToPath(import.meta.url));
-const projectDir = process.env.FAMTEC_PROJECT_DIR || join(root, "..", "..");
+const projectDir = process.env.FAMTEC_PROJECT_DIR || join(root, "..");
 const port = Number(process.env.FAMTEC_SERVER_PORT || 48741);
-const appName = process.env.FAMTEC_APP_NAME || "FAMTEC Token Vault";
+const appName = process.env.FAMTEC_APP_NAME || "Keytec API Wallet";
+const keychainReady = platform() === "darwin";
 
 const contentTypes = {
   ".html": "text/html; charset=utf-8",
@@ -32,8 +32,14 @@ createServer((request, response) => {
   }
 
   const pathname = url.pathname === "/" ? "/index.html" : url.pathname;
-  const safePath = pathname.replace(/^\/+/, "").replaceAll("..", "");
-  const filePath = join(root, safePath);
+  const safePath = pathname.replace(/^\/+/, "");
+  const filePath = resolve(root, safePath);
+
+  if (filePath !== root && !filePath.startsWith(root + sep)) {
+    response.writeHead(403, { "content-type": "text/plain; charset=utf-8" });
+    response.end("Forbidden");
+    return;
+  }
 
   if (!existsSync(filePath)) {
     response.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
@@ -52,9 +58,9 @@ createServer((request, response) => {
 
 function getStatus() {
   const packagePath = join(projectDir, "package.json");
-  const profilesPath = join(homedir(), ".famtec", "profiles.json");
+  const profilesPath = getProfilesFile();
   const profiles = readProfiles(profilesPath);
-  const securityTool = spawnSync("security", ["help"], { encoding: "utf8" });
+  const tokens = listTokens(profiles);
 
   return {
     app: appName,
@@ -63,15 +69,19 @@ function getStatus() {
     platform: platform(),
     version: readPackageVersion(packagePath),
     cliReady: existsSync(join(projectDir, "bin", "famtec.js")),
-    keychainReady: platform() === "darwin" && securityTool.status === 0,
+    keychainReady,
     profilesPath,
     profiles,
+    tokens,
     commands: [
-      "famtec add openai",
-      "famtec profile create my-app",
-      "famtec profile attach my-app openai",
-      "famtec run my-app -- npm run dev",
-      "famtec github sync my-app owner/repo"
+      "famtec add together",
+      "famtec add deepseek",
+      "famtec profile create openclaw",
+      "famtec profile attach openclaw together",
+      "famtec profile attach openclaw deepseek",
+      "famtec list",
+      "famtec run openclaw -- npm run dev",
+      "famtec github sync openclaw owner/repo"
     ]
   };
 }
@@ -94,6 +104,32 @@ function readProfiles(profilesPath) {
   } catch {
     return [];
   }
+}
+
+function listTokens(profiles) {
+  const attachedProfiles = new Map();
+  for (const profile of profiles) {
+    for (const provider of profile.providers) {
+      const current = attachedProfiles.get(provider) || [];
+      current.push(profile.name);
+      attachedProfiles.set(provider, current);
+    }
+  }
+
+  return [...attachedProfiles.keys()]
+    .sort((a, b) => a.localeCompare(b))
+    .map((provider) => ({
+      provider,
+      attachedProfiles: [...(attachedProfiles.get(provider) || [])].sort((a, b) => a.localeCompare(b))
+    }));
+}
+
+function getConfigDir() {
+  return process.env.FAMTEC_HOME || join(homedir(), ".famtec");
+}
+
+function getProfilesFile() {
+  return join(getConfigDir(), "profiles.json");
 }
 
 function sendJson(response, payload) {

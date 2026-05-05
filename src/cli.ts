@@ -8,11 +8,14 @@ import readline from "node:readline";
 import { Writable } from "node:stream";
 
 const KEYCHAIN_SERVICE = "famtec";
-const CONFIG_DIR = process.env.FAMTEC_HOME || join(homedir(), ".famtec");
-const PROFILES_FILE = join(CONFIG_DIR, "profiles.json");
 
 type ProfileStore = {
   profiles: Record<string, { providers: string[] }>;
+};
+
+type ListedToken = {
+  provider: string;
+  attachedProfiles: string[];
 };
 
 export async function main(argv: string[]): Promise<void> {
@@ -23,6 +26,8 @@ export async function main(argv: string[]): Promise<void> {
       return addToken(args);
     case "get":
       return getToken(args);
+    case "list":
+      return listTokens();
     case "remove":
       return removeToken(args);
     case "profile":
@@ -47,11 +52,17 @@ export async function main(argv: string[]): Promise<void> {
   }
 }
 
+const KNOWN_TOKEN_NAMES = new Set([
+  "GITHUB_TOKEN",
+  "TOGETHER_API_KEY",
+  "DEEPSEEK_API_KEY"
+]);
+
 export function normalizeProvider(provider?: string): string {
   const trimmed = provider?.trim();
   if (!trimmed) throw new Error("provider is required");
   const normalized = trimmed.toUpperCase().replace(/[^A-Z0-9_]/g, "_");
-  return normalized.endsWith("_API_KEY") || normalized === "GITHUB_TOKEN"
+  return normalized.endsWith("_API_KEY") || KNOWN_TOKEN_NAMES.has(normalized)
     ? normalized
     : `${normalized}_API_KEY`;
 }
@@ -63,36 +74,54 @@ export function maskSecret(value: string): string {
 }
 
 export function loadProfiles(): ProfileStore {
-  if (!existsSync(PROFILES_FILE)) return { profiles: {} };
-  const parsed = JSON.parse(readFileSync(PROFILES_FILE, "utf8")) as ProfileStore;
-  if (!parsed || typeof parsed !== "object" || !parsed.profiles) return { profiles: {} };
-  return parsed;
+  const profilesFile = getProfilesFile();
+  if (!existsSync(profilesFile)) return { profiles: {} };
+  try {
+    const parsed = JSON.parse(readFileSync(profilesFile, "utf8")) as unknown;
+    return normalizeProfileStore(parsed);
+  } catch {
+    return { profiles: {} };
+  }
 }
 
 export function saveProfiles(data: ProfileStore): void {
-  mkdirSync(dirname(PROFILES_FILE), { recursive: true, mode: 0o700 });
-  writeFileSync(PROFILES_FILE, `${JSON.stringify(data, null, 2)}\n`, { mode: 0o600 });
+  const profilesFile = getProfilesFile();
+  mkdirSync(dirname(profilesFile), { recursive: true, mode: 0o700 });
+  writeFileSync(profilesFile, `${JSON.stringify(normalizeProfileStore(data), null, 2)}\n`, { mode: 0o600 });
 }
 
 async function addToken(args: string[]): Promise<void> {
   const provider = normalizeProvider(args[0]);
   const value = process.env.FAMTEC_SECRET || await promptSecret(`Enter ${provider}: `);
   if (!value) throw new Error("secret value cannot be empty");
-  await keychainSet(provider, value);
+  keychainSet(provider, value);
   console.log(`Stored ${provider} in macOS Keychain.`);
 }
 
 async function getToken(args: string[]): Promise<void> {
   const provider = normalizeProvider(args[0]);
-  const value = await keychainGet(provider);
+  const value = keychainGet(provider);
   console.log(args.includes("--show") ? value : `${provider}=${maskSecret(value)}`);
 }
 
 async function removeToken(args: string[]): Promise<void> {
   const provider = normalizeProvider(args[0]);
-  await keychainDelete(provider);
+  keychainDelete(provider);
   detachProviderEverywhere(provider);
   console.log(`Removed ${provider}.`);
+}
+
+function listTokens(): void {
+  const tokens = listKnownTokens();
+  if (!tokens.length) {
+    console.log("No token handles attached to profiles yet. Run: famtec profile attach <name> <provider>");
+    return;
+  }
+
+  for (const token of tokens) {
+    const attached = token.attachedProfiles.length ? token.attachedProfiles.join(", ") : "unattached";
+    console.log(`${token.provider}  (${attached}; profile-handle only)`);
+  }
 }
 
 async function profileCommand(args: string[]): Promise<void> {
@@ -130,7 +159,7 @@ function attachProfile(args: string[]): void {
 }
 
 function listProfiles(): void {
-  const entries = Object.entries(loadProfiles().profiles);
+  const entries = Object.entries(loadProfiles().profiles).sort(([a], [b]) => a.localeCompare(b));
   if (entries.length === 0) {
     console.log("No profiles yet.");
     return;
@@ -189,10 +218,10 @@ async function githubCommand(args: string[]): Promise<void> {
   }
 }
 
-async function githubConnect(args: string[]): Promise<void> {
+async function githubConnect(_args: string[]): Promise<void> {
   const token = process.env.GITHUB_TOKEN || await promptSecret("Enter GitHub token: ");
   if (!token) throw new Error("GitHub token cannot be empty");
-  await keychainSet("GITHUB_TOKEN", token);
+  keychainSet("GITHUB_TOKEN", token);
   console.log("Stored GITHUB_TOKEN in macOS Keychain.");
 }
 
@@ -202,7 +231,7 @@ async function githubSync(args: string[]): Promise<void> {
   if (!repo || !/^[^/\s]+\/[^/\s]+$/.test(repo)) {
     throw new Error("usage: famtec github sync <profile> owner/repo");
   }
-  await assertGhAvailable();
+  assertGhAvailable();
   const env = await buildProfileEnv(profileName);
   const githubToken = process.env.GITHUB_TOKEN || await keychainGetOptional("GITHUB_TOKEN");
   if (!githubToken) throw new Error("run famtec github connect or set GITHUB_TOKEN first");
@@ -219,12 +248,12 @@ async function buildProfileEnv(profileName: string): Promise<Record<string, stri
   if (!profile) throw new Error(`profile "${profileName}" does not exist`);
   const env: Record<string, string> = {};
   for (const provider of profile.providers) {
-    env[provider] = await keychainGet(provider);
+    env[provider] = keychainGet(provider);
   }
   return env;
 }
 
-async function keychainSet(account: string, secret: string): Promise<void> {
+function keychainSet(account: string, secret: string): void {
   assertMacos();
   const result = spawnSync("security", [
     "add-generic-password",
@@ -239,7 +268,7 @@ async function keychainSet(account: string, secret: string): Promise<void> {
   if (result.status !== 0) throw new Error(cleanSecurityError(result.stderr));
 }
 
-async function keychainGet(account: string): Promise<string> {
+function keychainGet(account: string): string {
   assertMacos();
   const result = spawnSync("security", [
     "find-generic-password",
@@ -255,13 +284,13 @@ async function keychainGet(account: string): Promise<string> {
 
 async function keychainGetOptional(account: string): Promise<string> {
   try {
-    return await keychainGet(account);
+    return keychainGet(account);
   } catch {
     return "";
   }
 }
 
-async function keychainDelete(account: string): Promise<void> {
+function keychainDelete(account: string): void {
   assertMacos();
   const result = spawnSync("security", [
     "delete-generic-password",
@@ -319,7 +348,7 @@ class WritableMask extends Writable {
   }
 }
 
-async function assertGhAvailable(): Promise<void> {
+function assertGhAvailable(): void {
   const result = spawnSync("gh", ["--version"], { encoding: "utf8" });
   if (result.status !== 0) throw new Error("GitHub sync requires the GitHub CLI: https://cli.github.com/");
 }
@@ -353,12 +382,62 @@ function cleanSecurityError(stderr: string): string {
   return stderr.trim().replace(/^security: /, "") || "macOS Keychain command failed";
 }
 
+function getConfigDir(): string {
+  return process.env.FAMTEC_HOME || join(homedir(), ".famtec");
+}
+
+function getProfilesFile(): string {
+  return join(getConfigDir(), "profiles.json");
+}
+
+function normalizeProfileStore(data: unknown): ProfileStore {
+  if (!data || typeof data !== "object" || !("profiles" in data)) {
+    return { profiles: {} };
+  }
+
+  const rawProfiles = (data as { profiles?: unknown }).profiles;
+  if (!rawProfiles || typeof rawProfiles !== "object") {
+    return { profiles: {} };
+  }
+
+  const profiles: Record<string, { providers: string[] }> = {};
+  for (const [name, profile] of Object.entries(rawProfiles as Record<string, unknown>)) {
+    const rawProviders = (profile as { providers?: unknown })?.providers;
+    const providers = Array.isArray(rawProviders)
+      ? rawProviders.filter((item): item is string => typeof item === "string")
+      : [];
+    profiles[name] = { providers };
+  }
+  return { profiles };
+}
+
+function listKnownTokens(): ListedToken[] {
+  const data = loadProfiles();
+  const attachedProfiles = new Map<string, string[]>();
+
+  for (const [profileName, profile] of Object.entries(data.profiles)) {
+    for (const provider of profile.providers) {
+      const current = attachedProfiles.get(provider) || [];
+      current.push(profileName);
+      attachedProfiles.set(provider, current);
+    }
+  }
+
+  return [...attachedProfiles.keys()]
+    .sort((a, b) => a.localeCompare(b))
+    .map((provider) => ({
+      provider,
+      attachedProfiles: [...(attachedProfiles.get(provider) || [])].sort((a, b) => a.localeCompare(b))
+    }));
+}
+
 function printHelp(): void {
   console.log(`FAMTEC Token Vault
 
 Usage:
   famtec add <provider>
   famtec get <provider> [--show]
+  famtec list                      # profile handles only
   famtec remove <provider>
   famtec profile create <name>
   famtec profile attach <name> <provider>
@@ -368,11 +447,17 @@ Usage:
   famtec github connect
   famtec github sync <profile> owner/repo
 
+Providers (examples):
+  openai, anthropic, together, deepseek, github
+
 Examples:
-  famtec add openai
-  famtec profile create my-app
-  famtec profile attach my-app openai
-  famtec run my-app -- npm run dev`);
+  famtec add together
+  famtec add deepseek
+  famtec profile create openclaw
+  famtec profile attach openclaw together
+  famtec profile attach openclaw deepseek
+  famtec list                      # profile handles only
+  famtec run openclaw -- npm run dev`);
 }
 
 function printVersion(): void {
