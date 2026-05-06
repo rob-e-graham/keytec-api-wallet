@@ -52,6 +52,25 @@ createServer((request, response) => {
     return;
   }
 
+  if (url.pathname === "/api/token" && request.method === "DELETE") {
+    readBody(request, (body) => {
+      try {
+        const { provider } = JSON.parse(body);
+        const key = normalizeProvider(provider);
+        spawnSync("security", ["delete-generic-password", "-s", KEYCHAIN_SERVICE, "-a", key], { encoding: "utf8" });
+        const data = readProfileStore();
+        for (const profile of Object.values(data.profiles)) {
+          profile.providers = profile.providers.filter((p) => p !== key);
+        }
+        writeProfileStore(data);
+        sendJson(response, { ok: true });
+      } catch (err) {
+        sendError(response, 400, err.message || "invalid request");
+      }
+    });
+    return;
+  }
+
   if (url.pathname === "/api/profile" && request.method === "POST") {
     readBody(request, (body) => {
       try {
@@ -61,6 +80,55 @@ createServer((request, response) => {
         data.profiles[name] ||= { providers: [] };
         writeProfileStore(data);
         sendJson(response, { ok: true, name });
+      } catch (err) {
+        sendError(response, 400, err.message || "invalid request");
+      }
+    });
+    return;
+  }
+
+  if (url.pathname === "/api/profile" && request.method === "DELETE") {
+    readBody(request, (body) => {
+      try {
+        const { name } = JSON.parse(body);
+        if (!name) return sendError(response, 400, "name is required");
+        const data = readProfileStore();
+        delete data.profiles[name];
+        writeProfileStore(data);
+        sendJson(response, { ok: true });
+      } catch (err) {
+        sendError(response, 400, err.message || "invalid request");
+      }
+    });
+    return;
+  }
+
+  if (url.pathname === "/api/profile/attach" && request.method === "POST") {
+    readBody(request, (body) => {
+      try {
+        const { profile, provider } = JSON.parse(body);
+        if (!profile) return sendError(response, 400, "profile is required");
+        const key = normalizeProvider(provider);
+        attachProviderToProfile(profile, key);
+        sendJson(response, { ok: true });
+      } catch (err) {
+        sendError(response, 400, err.message || "invalid request");
+      }
+    });
+    return;
+  }
+
+  if (url.pathname === "/api/profile/detach" && request.method === "POST") {
+    readBody(request, (body) => {
+      try {
+        const { profile, provider } = JSON.parse(body);
+        const key = normalizeProvider(provider);
+        const data = readProfileStore();
+        if (data.profiles[profile]) {
+          data.profiles[profile].providers = data.profiles[profile].providers.filter((p) => p !== key);
+          writeProfileStore(data);
+        }
+        sendJson(response, { ok: true });
       } catch (err) {
         sendError(response, 400, err.message || "invalid request");
       }

@@ -85,7 +85,7 @@
 
     .masthead {
       position: relative;
-      min-height: 148px;
+      min-height: 112px;
       border-bottom: 1px solid var(--line);
       background: rgba(8, 8, 8, 0.96);
     }
@@ -1053,6 +1053,89 @@
       display: block;
     }
 
+    .icon-btn {
+      display: inline-grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border: 1px solid transparent;
+      color: var(--ink-faint);
+      background: transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--warn);
+      color: var(--warn);
+    }
+
+    .icon-btn.attach:hover {
+      border-color: var(--famtec);
+      color: var(--famtec);
+    }
+
+    .icon-btn svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .project-list-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .project-list-head .label {
+      margin: 0;
+    }
+
+    .attach-form {
+      display: none;
+      gap: 8px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .attach-form.open {
+      display: flex;
+    }
+
+    .attach-form select {
+      flex: 1;
+      min-height: 32px;
+      border: 1px solid var(--line-2);
+      color: var(--ink);
+      background: #080808;
+      outline: none;
+      padding: 0 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .onboarding {
+      border: 1px dashed var(--line-2);
+      padding: 32px 24px;
+      text-align: center;
+    }
+
+    .onboarding h3 {
+      margin: 0 0 10px;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .onboarding p {
+      margin: 0 0 20px;
+      color: var(--ink-soft);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
     @media (max-width: 560px) {
       .subtitle {
         max-width: 100%;
@@ -1155,12 +1238,7 @@
           <button class="btn learn-toggle" id="instruction-toggle" type="button" aria-pressed="false">Instruction Mode</button>
           <button class="btn primary" id="open-add-token" type="button">+ Add Token</button>
         </div>
-        <div class="access-line">Role
-          <select class="role-select" aria-label="Role">
-            <option>Developer</option>
-            <option>Admin</option>
-          </select>
-        </div>
+        <div class="access-line" id="vault-status-line">Local keychain &mdash; no cloud</div>
       </div>
     </header>
 
@@ -1183,16 +1261,19 @@
 
     <section class="workspace">
       <aside class="left-rail">
-        <p class="label">Vault Profiles</p>
+        <div class="project-list-head">
+          <p class="label">Vault Profiles</p>
+          <button class="btn" id="rail-new-profile" type="button" style="min-height:24px;font-size:10px;padding:0 8px;">+ New</button>
+        </div>
         <div class="profile-list" id="rail-profiles"></div>
 
         <section class="panel" style="margin-top:22px;">
-          <div class="panel-head"><h3>Network Stats</h3><span class="chip good" id="profile-count-tag">0</span></div>
+          <div class="panel-head"><h3>Vault Stats</h3><span class="chip good" id="profile-count-tag">0</span></div>
           <div class="panel-body">
             <div class="rows">
-              <div class="row"><div><strong>Token handles</strong><span>Attached to profiles</span></div><span id="token-count-rail">0</span></div>
+              <div class="row"><div><strong>Token handles</strong><span>Across all profiles</span></div><span id="token-count-rail">0</span></div>
               <div class="row"><div><strong>GitHub sync</strong><span>Manual boundary</span></div><span>ready</span></div>
-              <div class="row"><div><strong>Data mode</strong><span>No cloud backend</span></div><span>local</span></div>
+              <div class="row"><div><strong>Storage</strong><span>No cloud backend</span></div><span>local</span></div>
             </div>
           </div>
         </section>
@@ -1273,21 +1354,13 @@
               <div class="rows" id="activity-list"></div>
             </article>
 
-            <article class="card span-4">
-              <p class="label">1. Store</p>
-              <h4>Provider handles</h4>
-              <p>Add keys once using provider names. The CLI normalises handles into environment variables.</p>
-            </article>
-            <article class="card span-4">
-              <p class="label">2. Attach</p>
-              <h4>Project profiles</h4>
-              <p>Profiles become the durable replacement for project-level .env files.</p>
-            </article>
-            <article class="card span-4">
-              <p class="label">3. Run</p>
-              <h4>Ephemeral injection</h4>
-              <p>The child process receives credentials in memory, then the reference is discarded.</p>
-            </article>
+            <div class="span-12" id="dashboard-onboarding" style="display:none;">
+              <div class="onboarding">
+                <h3>Vault is empty</h3>
+                <p>Add your first API key to get started. It will be stored in macOS Keychain — never in a file.</p>
+                <button class="btn primary" type="button" id="onboarding-add-token">+ Add your first token</button>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -1304,15 +1377,34 @@
         </section>
 
         <section class="view" data-view="projects">
-          <section class="notice" data-guide="profiles">
-            <p class="label">Project Profiles</p>
-            <p>Profiles group token handles into runtime-ready bundles. One project profile can replace one local .env file.</p>
-          </section>
+          <div class="section-head" style="margin-bottom:16px;">
+            <div>
+              <h2 style="margin:0;font-family:var(--serif);font-size:28px;font-weight:600;color:var(--ink);">Projects</h2>
+              <p style="margin:6px 0 0;color:var(--ink-faint);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.18em;">Each profile replaces a .env file</p>
+            </div>
+            <button class="btn primary" id="projects-new-profile" type="button">+ New Profile</button>
+          </div>
           <div class="split">
             <div class="project-list" id="project-list"></div>
             <div class="panel">
-              <div class="panel-head"><h3 id="project-detail-title">Project</h3><button class="btn" id="project-run-command" type="button" data-copy-command="famtec run openclaw -- npm run dev">Run Command</button></div>
-              <div class="panel-body"><div class="rows" id="project-detail"></div></div>
+              <div class="panel-head">
+                <h3 id="project-detail-title">Project</h3>
+                <div style="display:flex;gap:6px;">
+                  <button class="btn" id="project-run-command" type="button" data-copy-command="famtec run openclaw -- npm run dev">Copy Run</button>
+                  <button class="icon-btn" id="project-delete-btn" title="Delete profile" style="border-color:var(--line-2);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div class="rows" id="project-detail"></div>
+                <div class="attach-form" id="attach-form">
+                  <select id="attach-token-select" aria-label="Token to attach"></select>
+                  <button class="btn primary" id="attach-confirm" type="button" style="white-space:nowrap;">Attach</button>
+                  <button class="btn" id="attach-cancel" type="button">✕</button>
+                </div>
+                <button class="btn" id="attach-open" type="button" style="margin-top:12px;width:100%;">+ Attach Token</button>
+              </div>
             </div>
           </div>
         </section>
@@ -1387,6 +1479,23 @@
         </section>
       </aside>
     </section>
+  </div>
+
+  <!-- Create Profile Modal -->
+  <div class="modal-backdrop" id="create-profile-backdrop" role="dialog" aria-modal="true" aria-labelledby="cp-modal-title">
+    <div class="modal">
+      <h3 id="cp-modal-title">New Profile</h3>
+      <div class="modal-error" id="cp-modal-error"></div>
+      <div class="field">
+        <label for="cp-modal-name">Profile name</label>
+        <input id="cp-modal-name" type="text" placeholder="e.g. openclaw, my-app, website" autocomplete="off">
+        <p class="field-hint">Letters, numbers, dots, hyphens, underscores only.</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" type="button" id="cp-modal-cancel">Cancel</button>
+        <button class="btn primary" type="button" id="cp-modal-save">Create Profile</button>
+      </div>
+    </div>
   </div>
 
   <!-- Add Token Modal -->
@@ -1636,6 +1745,11 @@
       document.getElementById("profile-file").textContent = payload.profilesPath || "";
       document.getElementById("service-name").textContent = payload.service || "famtec";
 
+      const isEmpty = !state.profiles.length && !state.tokens.length;
+      document.getElementById("dashboard-onboarding").style.display = isEmpty ? "block" : "none";
+      document.getElementById("vault-status-line").textContent =
+        keychainReady ? "Keychain ready — no cloud" : "Keychain check required";
+
       renderProfileRail();
       renderActivity(payload);
       renderHealth(keychainReady);
@@ -1690,15 +1804,21 @@
     function renderProfileRail() {
       const target = document.getElementById("rail-profiles");
       if (!state.profiles.length) {
-        target.innerHTML = `<div class="empty">No profiles configured yet.</div>`;
+        target.innerHTML = `<div class="empty">No profiles yet.</div>`;
         return;
       }
       target.innerHTML = state.profiles.map((profile) => `
-        <div class="profile-chip">
-          <div><strong>${escapeHtml(profile.name)}</strong><span>${profile.providers.length} handles</span></div>
-          <span class="chip good">ready</span>
+        <div class="profile-chip" style="cursor:pointer;" data-rail-project="${escapeAttribute(profile.name)}">
+          <div><strong>${escapeHtml(profile.name)}</strong><span>${profile.providers.length} handle${profile.providers.length !== 1 ? "s" : ""}</span></div>
+          <span class="chip ${profile.providers.length ? "good" : "warn"}">${profile.providers.length ? "ready" : "empty"}</span>
         </div>
       `).join("");
+      target.querySelectorAll("[data-rail-project]").forEach((el) => {
+        el.addEventListener("click", () => {
+          state.selectedProject = el.dataset.railProject;
+          activateView("projects");
+        });
+      });
     }
 
     function renderActivity(payload) {
@@ -1758,64 +1878,175 @@
       });
       const target = document.getElementById("token-table-wrap");
       if (!tokens.length) {
-        target.innerHTML = `<div class="empty">No token handles attached yet.</div>`;
+        target.innerHTML = `<div class="empty">No token handles yet. Use <strong>+ Add Token</strong> to store your first key.</div>`;
         return;
       }
       target.innerHTML = `
         <table class="token-table">
-          <thead><tr><th>Name</th><th>Provider</th><th>Status</th><th>Attached</th><th></th></tr></thead>
+          <thead><tr><th>Name</th><th>Provider</th><th>Status</th><th>Attached to</th><th></th></tr></thead>
           <tbody>
             ${tokens.map((token) => `
               <tr>
                 <td><span class="token-name">${escapeHtml(token.name)}</span></td>
                 <td><span class="provider"><span class="provider-dot">${escapeHtml(token.provider.slice(0, 1))}</span>${escapeHtml(token.provider)}</span></td>
-                <td><span class="chip ${token.status === "Ready" ? "good" : token.status === "Attached" || token.status === "Unattached" ? "warn" : "danger"}">${escapeHtml(token.status)}</span></td>
-                <td>${escapeHtml(token.attachedProfiles.length ? token.attachedProfiles.join(", ") : "none")}</td>
-                <td><button class="copy" type="button" title="Copy inspect command" data-copy-command="${escapeAttribute(token.project ? `famtec env ${token.project}` : `famtec get ${token.name}`)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button></td>
+                <td><span class="chip ${token.status === "Ready" ? "good" : "warn"}">${escapeHtml(token.status)}</span></td>
+                <td>${escapeHtml(token.attachedProfiles.length ? token.attachedProfiles.join(", ") : "—")}</td>
+                <td style="display:flex;gap:4px;align-items:center;height:46px;">
+                  <button class="copy" type="button" title="Copy run command" data-copy-command="${escapeAttribute(token.project ? `famtec env ${token.project}` : `famtec get ${token.name}`)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                  <button class="icon-btn" title="Remove from keychain" data-remove-token="${escapeAttribute(token.name)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg></button>
+                </td>
               </tr>
             `).join("")}
           </tbody>
         </table>
       `;
+      target.querySelectorAll("[data-remove-token]").forEach((btn) => {
+        btn.addEventListener("click", () => removeToken(btn.dataset.removeToken));
+      });
+    }
+
+    async function removeToken(provider) {
+      if (!confirm(`Remove ${provider} from keychain and all profiles?`)) return;
+      try {
+        const res = await fetch("/api/token", {
+          method: "DELETE",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ provider })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error);
+        await refreshState();
+      } catch (err) {
+        alert(`Remove failed: ${err.message}`);
+      }
     }
 
     function renderProjects() {
       const list = document.getElementById("project-list");
+      const attachForm = document.getElementById("attach-form");
+      const attachOpen = document.getElementById("attach-open");
+
       if (!state.profiles.length) {
-        list.innerHTML = `<div class="empty">No projects yet.</div>`;
-        document.getElementById("project-detail-title").textContent = "Project";
-        document.getElementById("project-detail").innerHTML = `<div class="empty">Create a profile to attach token handles.</div>`;
+        list.innerHTML = `<div class="empty">No profiles yet. Use <strong>+ New Profile</strong> to create one.</div>`;
+        document.getElementById("project-detail-title").textContent = "Profile";
+        document.getElementById("project-detail").innerHTML = `<div class="empty">Select a profile to see its tokens.</div>`;
+        attachOpen.style.display = "none";
+        attachForm.classList.remove("open");
         return;
+      }
+
+      if (!state.selectedProject || !state.profiles.find((p) => p.name === state.selectedProject)) {
+        state.selectedProject = state.profiles[0].name;
       }
 
       list.innerHTML = state.profiles.map((profile) => `
         <button class="profile-button" type="button" aria-selected="${profile.name === state.selectedProject ? "true" : "false"}" data-project="${escapeAttribute(profile.name)}">
           <strong>${escapeHtml(profile.name)}</strong>
-          <span>${profile.providers.length} token handles</span>
+          <span>${profile.providers.length} token handle${profile.providers.length !== 1 ? "s" : ""}</span>
         </button>
       `).join("");
 
       list.querySelectorAll("[data-project]").forEach((button) => {
         button.addEventListener("click", () => {
           state.selectedProject = button.dataset.project;
+          attachForm.classList.remove("open");
           renderProjects();
           answerMobileQuestion(true);
         });
       });
 
-      const selected = state.profiles.find((profile) => profile.name === state.selectedProject) || state.profiles[0];
+      const selected = state.profiles.find((p) => p.name === state.selectedProject) || state.profiles[0];
       document.getElementById("project-detail-title").textContent = selected.name;
-      const runCommand = `famtec run ${selected.name} -- npm run dev`;
-      document.getElementById("project-run-command").dataset.copyCommand = runCommand;
+      document.getElementById("project-run-command").dataset.copyCommand = `famtec run ${selected.name} -- npm run dev`;
+      document.getElementById("project-delete-btn").onclick = () => deleteProfile(selected.name);
+
       document.getElementById("project-detail").innerHTML = selected.providers.length
-        ? selected.providers.map((provider) => `
-          <div class="row">
-            <div><strong>${escapeHtml(provider)}</strong><span>${escapeHtml(providerLabel(provider))}</span></div>
-            <span class="chip ${state.tokens.find((token) => token.name === provider)?.status === "Ready" ? "good" : "warn"}">${escapeHtml(state.tokens.find((token) => token.name === provider)?.status || "Attached")}</span>
-          </div>
-        `).join("")
-        : `<div class="empty">No token handles attached.</div>`;
+        ? selected.providers.map((provider) => {
+            const tok = state.tokens.find((t) => t.name === provider);
+            return `
+              <div class="row">
+                <div><strong>${escapeHtml(provider)}</strong><span>${escapeHtml(providerLabel(provider))}</span></div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                  <span class="chip ${tok?.status === "Ready" ? "good" : "warn"}">${escapeHtml(tok?.status || "Attached")}</span>
+                  <button class="icon-btn" title="Detach from profile" data-detach-provider="${escapeAttribute(provider)}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                  </button>
+                </div>
+              </div>`;
+          }).join("")
+        : `<div class="empty">No tokens attached. Use <strong>+ Attach Token</strong> below.</div>`;
+
+      document.querySelectorAll("[data-detach-provider]").forEach((btn) => {
+        btn.addEventListener("click", () => detachToken(selected.name, btn.dataset.detachProvider));
+      });
+
+      // Populate attach dropdown with tokens not already in this profile
+      const unattached = state.tokens.filter((t) => !selected.providers.includes(t.name));
+      const sel = document.getElementById("attach-token-select");
+      sel.innerHTML = unattached.length
+        ? unattached.map((t) => `<option value="${escapeAttribute(t.name)}">${escapeHtml(t.name)}</option>`).join("")
+        : `<option value="">No other tokens stored</option>`;
+      attachOpen.style.display = unattached.length ? "block" : "none";
+
       syncRuntimeCommand();
+    }
+
+    async function deleteProfile(name) {
+      if (!confirm(`Delete profile "${name}"? This does not remove keys from the keychain.`)) return;
+      try {
+        const res = await fetch("/api/profile", {
+          method: "DELETE",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ name })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error);
+        state.selectedProject = "";
+        await refreshState();
+      } catch (err) {
+        alert(`Delete failed: ${err.message}`);
+      }
+    }
+
+    async function detachToken(profile, provider) {
+      try {
+        const res = await fetch("/api/profile/detach", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ profile, provider })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error);
+        await refreshState();
+      } catch (err) {
+        alert(`Detach failed: ${err.message}`);
+      }
+    }
+
+    async function attachToken(profile, provider) {
+      if (!provider) return;
+      try {
+        const res = await fetch("/api/profile/attach", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ profile, provider })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error);
+        document.getElementById("attach-form").classList.remove("open");
+        await refreshState();
+      } catch (err) {
+        alert(`Attach failed: ${err.message}`);
+      }
+    }
+
+    async function refreshState() {
+      try {
+        const payload = await fetch("/api/status").then((r) => r.json());
+        hydrate(payload);
+      } catch {
+        /* offline — leave state as-is */
+      }
     }
 
     function syncRuntimeCommand() {
@@ -1826,12 +2057,37 @@
     }
 
     function answerMobileQuestion(silent = false) {
-      const selected = state.profiles.find((profile) => profile.name === state.selectedProject) || state.profiles[0];
-      const answer = !selected
-        ? "Start by creating a profile, then I can explain which provider handles it needs."
-        : !selected.providers.length
-          ? `${selected.name} exists, but it does not have any token handles attached yet.`
-          : `${selected.name} needs ${selected.providers.join(", ")}. I can show the handle names, but never the secret values.`;
+      const input = document.getElementById("mobile-question-input").value.toLowerCase().trim();
+      const selected = state.profiles.find((p) => p.name === state.selectedProject) || state.profiles[0];
+      let answer;
+
+      if (!state.profiles.length) {
+        answer = "No profiles configured yet. Create a profile and attach tokens to it.";
+      } else if (input.includes("run") || input.includes("start") || input.includes("how")) {
+        answer = selected
+          ? `Run: famtec run ${selected.name} -- npm run dev  — this injects all attached keys as env vars without writing a file.`
+          : "Select a profile first, then ask how to run it.";
+      } else if (input.includes("token") || input.includes("key") || input.includes("need")) {
+        answer = selected
+          ? selected.providers.length
+            ? `${selected.name} needs: ${selected.providers.join(", ")}. Values are stored in macOS Keychain — never shown here.`
+            : `${selected.name} has no tokens attached yet. Use + Attach Token on the Projects tab.`
+          : "Select a profile to see which keys it needs.";
+      } else if (input.includes("profile") || input.includes("project")) {
+        const names = state.profiles.map((p) => `${p.name} (${p.providers.length} keys)`).join(", ");
+        answer = `${state.profiles.length} profile${state.profiles.length !== 1 ? "s" : ""}: ${names}.`;
+      } else if (input.includes("github") || input.includes("ci") || input.includes("sync")) {
+        answer = selected
+          ? `Sync to GitHub Actions: famtec github sync ${selected.name} owner/repo — pushes keys as Actions Secrets explicitly.`
+          : "Select a profile first to get the sync command.";
+      } else {
+        answer = selected
+          ? selected.providers.length
+            ? `${selected.name} needs ${selected.providers.join(", ")}. Key values stay in the macOS Keychain — this vault never exposes them.`
+            : `${selected.name} exists but has no tokens attached yet.`
+          : "Start by creating a profile, then attach your API keys to it.";
+      }
+
       document.getElementById("mobile-answer").textContent = answer;
       if (!silent) activateView("projects");
     }
@@ -1925,6 +2181,68 @@
       }
     }
 
+    // --- Attach / detach wiring ---
+    document.getElementById("attach-open").addEventListener("click", () => {
+      document.getElementById("attach-form").classList.toggle("open");
+    });
+    document.getElementById("attach-cancel").addEventListener("click", () => {
+      document.getElementById("attach-form").classList.remove("open");
+    });
+    document.getElementById("attach-confirm").addEventListener("click", () => {
+      const provider = document.getElementById("attach-token-select").value;
+      if (state.selectedProject && provider) attachToken(state.selectedProject, provider);
+    });
+
+    // --- Create Profile modal ---
+    function openCreateProfileModal() {
+      document.getElementById("cp-modal-name").value = "";
+      document.getElementById("cp-modal-error").classList.remove("visible");
+      document.getElementById("create-profile-backdrop").classList.add("open");
+      document.getElementById("cp-modal-name").focus();
+    }
+    function closeCreateProfileModal() {
+      document.getElementById("create-profile-backdrop").classList.remove("open");
+    }
+    async function submitCreateProfile() {
+      const name = document.getElementById("cp-modal-name").value.trim();
+      const errorEl = document.getElementById("cp-modal-error");
+      errorEl.classList.remove("visible");
+      if (!name) { errorEl.textContent = "Profile name is required."; errorEl.classList.add("visible"); return; }
+      if (!/^[a-zA-Z0-9._-]+$/.test(name)) { errorEl.textContent = "Letters, numbers, dots, hyphens, underscores only."; errorEl.classList.add("visible"); return; }
+      const btn = document.getElementById("cp-modal-save");
+      btn.textContent = "Creating…"; btn.disabled = true;
+      try {
+        const res = await fetch("/api/profile", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ name })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error);
+        state.selectedProject = name;
+        closeCreateProfileModal();
+        await refreshState();
+        activateView("projects");
+      } catch (err) {
+        errorEl.textContent = err.message; errorEl.classList.add("visible");
+      } finally {
+        btn.textContent = "Create Profile"; btn.disabled = false;
+      }
+    }
+    document.getElementById("rail-new-profile").addEventListener("click", openCreateProfileModal);
+    document.getElementById("projects-new-profile").addEventListener("click", openCreateProfileModal);
+    document.getElementById("cp-modal-cancel").addEventListener("click", closeCreateProfileModal);
+    document.getElementById("cp-modal-save").addEventListener("click", submitCreateProfile);
+    document.getElementById("create-profile-backdrop").addEventListener("click", (e) => {
+      if (e.target === e.currentTarget) closeCreateProfileModal();
+    });
+    document.getElementById("cp-modal-name").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") submitCreateProfile();
+    });
+
+    // --- Onboarding button ---
+    document.getElementById("onboarding-add-token").addEventListener("click", openAddTokenModal);
+
     document.getElementById("open-add-token").addEventListener("click", openAddTokenModal);
     document.getElementById("modal-cancel").addEventListener("click", closeAddTokenModal);
     document.getElementById("modal-save").addEventListener("click", submitAddToken);
@@ -1936,8 +2254,10 @@
       document.getElementById("modal-key-preview").textContent = preview ? `Env key: ${preview}` : "";
     });
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeAddTokenModal();
-      if (e.key === "Enter" && document.getElementById("add-token-backdrop").classList.contains("open")) submitAddToken();
+      if (e.key === "Escape") {
+        closeAddTokenModal();
+        closeCreateProfileModal();
+      }
     });
   </script>
 </body>
