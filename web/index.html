@@ -948,6 +948,111 @@
       }
     }
 
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: min(480px, 94vw);
+      border: 1px solid var(--line-2);
+      background: #0e0e0e;
+      padding: 24px;
+    }
+
+    .modal h3 {
+      margin: 0 0 20px;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink-faint);
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid var(--line-2);
+      color: var(--ink);
+      background: #080808;
+      outline: none;
+      padding: 0 12px;
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--famtec);
+    }
+
+    .field-hint {
+      margin: 5px 0 0;
+      color: var(--ink-faint);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 22px;
+    }
+
+    .modal-error {
+      display: none;
+      margin-bottom: 14px;
+      border: 1px solid rgba(200, 112, 96, 0.45);
+      color: var(--warn);
+      background: rgba(200, 112, 96, 0.07);
+      padding: 10px 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .modal-error.visible {
+      display: block;
+    }
+
+    .modal-success {
+      display: none;
+      margin-bottom: 14px;
+      border: 1px solid rgba(176, 200, 122, 0.45);
+      color: var(--famtec);
+      background: rgba(176, 200, 122, 0.07);
+      padding: 10px 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .modal-success.visible {
+      display: block;
+    }
+
     @media (max-width: 560px) {
       .subtitle {
         max-width: 100%;
@@ -1048,7 +1153,7 @@
           <button class="btn" id="jump-keychain" type="button">KEYCHAIN</button>
           <button class="btn" id="jump-profiles" type="button">PROFILES</button>
           <button class="btn learn-toggle" id="instruction-toggle" type="button" aria-pressed="false">Instruction Mode</button>
-          <button class="btn primary" type="button" data-copy-command="famtec add together">+ Add Token</button>
+          <button class="btn primary" id="open-add-token" type="button">+ Add Token</button>
         </div>
         <div class="access-line">Role
           <select class="role-select" aria-label="Role">
@@ -1282,6 +1387,42 @@
         </section>
       </aside>
     </section>
+  </div>
+
+  <!-- Add Token Modal -->
+  <div class="modal-backdrop" id="add-token-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal">
+      <h3 id="modal-title">Add API Token</h3>
+      <div class="modal-error" id="modal-error"></div>
+      <div class="modal-success" id="modal-success"></div>
+      <div class="field">
+        <label for="modal-provider">Provider</label>
+        <input id="modal-provider" type="text" placeholder="e.g. together, deepseek, openai" autocomplete="off" list="provider-suggestions">
+        <datalist id="provider-suggestions">
+          <option value="together">
+          <option value="deepseek">
+          <option value="openai">
+          <option value="anthropic">
+          <option value="github">
+          <option value="supabase">
+        </datalist>
+        <p class="field-hint" id="modal-key-preview"></p>
+      </div>
+      <div class="field">
+        <label for="modal-secret">API Key</label>
+        <input id="modal-secret" type="password" placeholder="Paste your key here" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="modal-profile">Attach to Profile (optional)</label>
+        <select id="modal-profile">
+          <option value="">— none —</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" type="button" id="modal-cancel">Cancel</button>
+        <button class="btn primary" type="button" id="modal-save">Save to Keychain</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -1713,6 +1854,91 @@
     function escapeAttribute(value) {
       return escapeHtml(value).replace(/`/g, "&#096;");
     }
+
+    // --- Add Token Modal ---
+
+    const KNOWN_NAMES = new Set(["GITHUB_TOKEN", "TOGETHER_API_KEY", "DEEPSEEK_API_KEY"]);
+
+    function normalizeProviderPreview(raw) {
+      const trimmed = raw.trim();
+      if (!trimmed) return "";
+      const n = trimmed.toUpperCase().replace(/[^A-Z0-9_]/g, "_");
+      return n.endsWith("_API_KEY") || KNOWN_NAMES.has(n) ? n : `${n}_API_KEY`;
+    }
+
+    function openAddTokenModal() {
+      const backdrop = document.getElementById("add-token-backdrop");
+      const profileSelect = document.getElementById("modal-profile");
+      profileSelect.innerHTML = `<option value="">— none —</option>` +
+        state.profiles.map((p) => `<option value="${escapeAttribute(p.name)}">${escapeHtml(p.name)}</option>`).join("");
+      document.getElementById("modal-provider").value = "";
+      document.getElementById("modal-secret").value = "";
+      document.getElementById("modal-key-preview").textContent = "";
+      document.getElementById("modal-error").classList.remove("visible");
+      document.getElementById("modal-success").classList.remove("visible");
+      backdrop.classList.add("open");
+      document.getElementById("modal-provider").focus();
+    }
+
+    function closeAddTokenModal() {
+      document.getElementById("add-token-backdrop").classList.remove("open");
+    }
+
+    async function submitAddToken() {
+      const provider = document.getElementById("modal-provider").value.trim();
+      const secret = document.getElementById("modal-secret").value.trim();
+      const profile = document.getElementById("modal-profile").value;
+      const errorEl = document.getElementById("modal-error");
+      const successEl = document.getElementById("modal-success");
+
+      errorEl.classList.remove("visible");
+      successEl.classList.remove("visible");
+
+      if (!provider) { errorEl.textContent = "Provider name is required."; errorEl.classList.add("visible"); return; }
+      if (!secret) { errorEl.textContent = "API key cannot be empty."; errorEl.classList.add("visible"); return; }
+
+      const saveBtn = document.getElementById("modal-save");
+      saveBtn.textContent = "Saving…";
+      saveBtn.disabled = true;
+
+      try {
+        const response = await fetch("/api/token", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ provider, secret, profile: profile || undefined })
+        });
+        const data = await response.json();
+        if (!data.ok) throw new Error(data.error || "Failed to save token");
+        successEl.textContent = `Saved ${data.provider} to keychain.${profile ? ` Attached to ${profile}.` : ""}`;
+        successEl.classList.add("visible");
+        document.getElementById("modal-secret").value = "";
+        window.setTimeout(() => {
+          closeAddTokenModal();
+          fetch("/api/status").then((r) => r.json()).then(hydrate).catch(() => {});
+        }, 1200);
+      } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.add("visible");
+      } finally {
+        saveBtn.textContent = "Save to Keychain";
+        saveBtn.disabled = false;
+      }
+    }
+
+    document.getElementById("open-add-token").addEventListener("click", openAddTokenModal);
+    document.getElementById("modal-cancel").addEventListener("click", closeAddTokenModal);
+    document.getElementById("modal-save").addEventListener("click", submitAddToken);
+    document.getElementById("add-token-backdrop").addEventListener("click", (e) => {
+      if (e.target === e.currentTarget) closeAddTokenModal();
+    });
+    document.getElementById("modal-provider").addEventListener("input", (e) => {
+      const preview = normalizeProviderPreview(e.target.value);
+      document.getElementById("modal-key-preview").textContent = preview ? `Env key: ${preview}` : "";
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeAddTokenModal();
+      if (e.key === "Enter" && document.getElementById("add-token-backdrop").classList.contains("open")) submitAddToken();
+    });
   </script>
 </body>
 </html>

@@ -1,14 +1,16 @@
 import { createServer } from "node:http";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { dirname, extname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { homedir, platform } from "node:os";
+import { spawnSync } from "node:child_process";
 
 const root = dirname(fileURLToPath(import.meta.url));
 const projectDir = process.env.FAMTEC_PROJECT_DIR || join(root, "..");
 const port = Number(process.env.FAMTEC_SERVER_PORT || 48741);
 const appName = process.env.FAMTEC_APP_NAME || "Keytec API Wallet";
-const keychainReady = platform() === "darwin";
+const keychainReady = platform() === "darwin" && spawnSync("security", ["help"], { encoding: "utf8" }).status === 0;
+const KEYCHAIN_SERVICE = "famtec";
 
 const contentTypes = {
   ".html": "text/html; charset=utf-8",
@@ -28,6 +30,41 @@ createServer((request, response) => {
 
   if (url.pathname === "/api/status") {
     sendJson(response, getStatus());
+    return;
+  }
+
+  if (url.pathname === "/api/token" && request.method === "POST") {
+    readBody(request, (body) => {
+      try {
+        const { provider, secret, profile } = JSON.parse(body);
+        const key = normalizeProvider(provider);
+        if (!secret) return sendError(response, 400, "secret is required");
+        const result = spawnSync("security", [
+          "add-generic-password", "-U", "-s", KEYCHAIN_SERVICE, "-a", key, "-w", secret
+        ], { encoding: "utf8" });
+        if (result.status !== 0) return sendError(response, 500, cleanError(result.stderr));
+        if (profile) attachProviderToProfile(profile, key);
+        sendJson(response, { ok: true, provider: key });
+      } catch (err) {
+        sendError(response, 400, err.message || "invalid request");
+      }
+    });
+    return;
+  }
+
+  if (url.pathname === "/api/profile" && request.method === "POST") {
+    readBody(request, (body) => {
+      try {
+        const { name } = JSON.parse(body);
+        if (!name || !/^[a-zA-Z0-9._-]+$/.test(name)) return sendError(response, 400, "invalid profile name");
+        const data = readProfileStore();
+        data.profiles[name] ||= { providers: [] };
+        writeProfileStore(data);
+        sendJson(response, { ok: true, name });
+      } catch (err) {
+        sendError(response, 400, err.message || "invalid request");
+      }
+    });
     return;
   }
 
@@ -132,10 +169,60 @@ function getProfilesFile() {
   return join(getConfigDir(), "profiles.json");
 }
 
+function readProfileStore() {
+  try {
+    const data = JSON.parse(readFileSync(getProfilesFile(), "utf8"));
+    if (!data || typeof data.profiles !== "object") return { profiles: {} };
+    return data;
+  } catch {
+    return { profiles: {} };
+  }
+}
+
+function writeProfileStore(data) {
+  const file = getProfilesFile();
+  mkdirSync(dirname(file), { recursive: true, mode: 0o700 });
+  writeFileSync(file, `${JSON.stringify(data, null, 2)}\n`, { mode: 0o600 });
+}
+
+function attachProviderToProfile(profileName, provider) {
+  const data = readProfileStore();
+  data.profiles[profileName] ||= { providers: [] };
+  if (!data.profiles[profileName].providers.includes(provider)) {
+    data.profiles[profileName].providers.push(provider);
+  }
+  writeProfileStore(data);
+}
+
+function normalizeProvider(provider) {
+  const trimmed = String(provider || "").trim();
+  if (!trimmed) throw new Error("provider is required");
+  const normalized = trimmed.toUpperCase().replace(/[^A-Z0-9_]/g, "_");
+  const known = new Set(["GITHUB_TOKEN", "TOGETHER_API_KEY", "DEEPSEEK_API_KEY"]);
+  return normalized.endsWith("_API_KEY") || known.has(normalized)
+    ? normalized
+    : `${normalized}_API_KEY`;
+}
+
+function cleanError(stderr) {
+  return String(stderr || "").trim().replace(/^security: /, "") || "Keychain command failed";
+}
+
+function readBody(request, callback) {
+  let body = "";
+  request.on("data", (chunk) => { body += chunk.toString(); });
+  request.on("end", () => callback(body));
+}
+
 function sendJson(response, payload) {
   response.writeHead(200, {
     "content-type": "application/json; charset=utf-8",
     "cache-control": "no-store"
   });
   response.end(JSON.stringify(payload));
+}
+
+function sendError(response, status, message) {
+  response.writeHead(status, { "content-type": "application/json; charset=utf-8" });
+  response.end(JSON.stringify({ ok: false, error: message }));
 }
