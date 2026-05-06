@@ -118,6 +118,24 @@ createServer((request, response) => {
     return;
   }
 
+  const profileEnvMatch = url.pathname.match(/^\/api\/profile\/([^/]+)\/env$/);
+  if (profileEnvMatch && request.method === "GET") {
+    const name = decodeURIComponent(profileEnvMatch[1]);
+    if (!keychainReady) return sendError(response, 503, "keychain not available");
+    const data = readProfileStore();
+    const profile = data.profiles[name];
+    if (!profile) return sendError(response, 404, `profile "${name}" not found`);
+    const env = {};
+    for (const provider of profile.providers) {
+      const result = spawnSync("security", [
+        "find-generic-password", "-s", KEYCHAIN_SERVICE, "-a", provider, "-w"
+      ], { encoding: "utf8" });
+      if (result.status === 0) env[provider] = result.stdout.replace(/\n$/, "");
+    }
+    sendJson(response, { ok: true, profile: name, env });
+    return;
+  }
+
   if (url.pathname === "/api/profile/detach" && request.method === "POST") {
     readBody(request, (body) => {
       try {

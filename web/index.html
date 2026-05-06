@@ -18,7 +18,7 @@
       --panel-3: #1b1b1b;
       --line: #242424;
       --line-2: #343434;
-      --famtec: #b0c87a;
+      --accent: #b0c87a;
       --cyan: #8fbcb0;
       --gold: #c7a65a;
       --warn: #c87060;
@@ -29,14 +29,9 @@
       --sans: "DM Sans", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html,
-    body {
-      min-height: 100%;
-    }
+    html, body { min-height: 100%; }
 
     body {
       margin: 0;
@@ -47,16 +42,8 @@
       overflow-x: hidden;
     }
 
-    button,
-    input,
-    select {
-      font: inherit;
-      letter-spacing: 0;
-    }
-
-    button {
-      cursor: pointer;
-    }
+    button, input, select { font: inherit; letter-spacing: 0; }
+    button { cursor: pointer; }
 
     .shell {
       min-height: 100vh;
@@ -65,20 +52,8 @@
         var(--bg);
     }
 
-    .mono,
-    .meta,
-    .status-cell,
-    .tab,
-    .btn,
-    .chip,
-    .label,
-    .small,
-    code,
-    th,
-    .token-name,
-    .metric-label,
-    .wordmark,
-    .mobile-code {
+    .mono, .meta, .status-cell, .tab, .btn, .chip, .label, .small, code,
+    th, .token-name, .metric-label, .wordmark, .mobile-code {
       font-family: var(--mono);
       letter-spacing: 0;
     }
@@ -107,10 +82,7 @@
       letter-spacing: 0.42em;
     }
 
-    .wordmark .accent {
-      color: var(--famtec);
-      font-style: italic;
-    }
+    .wordmark .accent { color: var(--accent); font-style: italic; }
 
     .subtitle {
       margin: 10px 0 0;
@@ -131,8 +103,7 @@
       color: var(--ink-faint);
     }
 
-    .build-line,
-    .access-line {
+    .build-line, .access-line {
       font-family: var(--mono);
       font-size: 11px;
       letter-spacing: 0.08em;
@@ -147,8 +118,7 @@
       justify-content: flex-end;
     }
 
-    .btn,
-    .role-select {
+    .btn, .role-select {
       min-height: 30px;
       border: 1px solid var(--line-2);
       border-radius: 0;
@@ -159,29 +129,21 @@
       text-transform: uppercase;
     }
 
-    .btn:hover,
-    .role-select:hover {
-      border-color: var(--famtec);
-      color: var(--famtec);
+    .btn:hover, .role-select:hover {
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
     .btn.primary {
       border-color: rgba(176, 200, 122, 0.72);
       color: #0c0f08;
-      background: var(--famtec);
+      background: var(--accent);
       font-weight: 700;
     }
 
-    .learn-toggle[aria-pressed="true"] {
-      border-color: var(--famtec);
-      color: var(--famtec);
-      background: rgba(176, 200, 122, 0.08);
-    }
-
-    .role-select {
-      width: 152px;
-      color: var(--ink);
-      background: #070707;
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .status-grid {
@@ -205,9 +167,7 @@
       white-space: nowrap;
     }
 
-    .status-cell:last-child {
-      border-right: 0;
-    }
+    .status-cell:last-child { border-right: 0; }
 
     .dot {
       display: inline-block;
@@ -219,18 +179,10 @@
       vertical-align: middle;
     }
 
-    .dot.warn {
-      background: var(--gold);
-    }
+    .dot.warn { background: var(--gold); }
+    .dot.info { background: var(--info); }
 
-    .dot.info {
-      background: var(--info);
-    }
-
-    .status-cell strong {
-      color: var(--ink-soft);
-      font-weight: 500;
-    }
+    .status-cell strong { color: var(--ink-soft); font-weight: 500; }
 
     .module-tabs {
       display: flex;
@@ -252,13 +204,9 @@
       text-transform: uppercase;
     }
 
-    .tab:hover {
-      color: var(--ink-soft);
-    }
+    .tab:hover { color: var(--ink-soft); }
 
-    .tab[aria-selected="true"] {
-      color: var(--famtec);
-    }
+    .tab[aria-selected="true"] { color: var(--accent); }
 
     .tab[aria-selected="true"]::after {
       content: "";
@@ -267,17 +215,16 @@
       right: 0;
       bottom: 0;
       height: 2px;
-      background: var(--famtec);
+      background: var(--accent);
     }
 
     .workspace {
       display: grid;
-      grid-template-columns: 292px minmax(0, 1fr) 330px;
-      min-height: calc(100vh - 227px);
+      grid-template-columns: 268px minmax(0, 1fr) 300px;
+      min-height: calc(100vh - 192px);
     }
 
-    .left-rail,
-    .right-rail {
+    .left-rail, .right-rail {
       border-right: 1px solid var(--line);
       background: rgba(10, 10, 10, 0.78);
       padding: 22px 18px;
@@ -288,24 +235,14 @@
       border-left: 1px solid var(--line);
     }
 
-    .main {
-      min-width: 0;
-      padding: 22px 30px;
-    }
+    .main { min-width: 0; padding: 22px 30px; }
 
-    .panel,
-    .card,
-    .notice,
-    .metric,
-    .mobile-preview,
-    .table-shell {
+    .panel, .card, .metric, .table-shell {
       border: 1px solid var(--line);
       background: rgba(17, 17, 17, 0.72);
     }
 
-    .panel {
-      margin-bottom: 22px;
-    }
+    .panel { margin-bottom: 22px; }
 
     .panel-head {
       display: flex;
@@ -324,9 +261,7 @@
       font-weight: 700;
     }
 
-    .panel-body {
-      padding: 14px;
-    }
+    .panel-body { padding: 14px; }
 
     .label {
       margin: 0 0 14px;
@@ -336,13 +271,8 @@
       letter-spacing: 0.18em;
     }
 
-    .view {
-      display: none;
-    }
-
-    .view[data-active="true"] {
-      display: block;
-    }
+    .view { display: none; }
+    .view[data-active="true"] { display: block; }
 
     .section-head {
       display: flex;
@@ -370,91 +300,6 @@
       letter-spacing: 0.18em;
     }
 
-    .notice {
-      margin-bottom: 18px;
-      border-color: rgba(176, 200, 122, 0.36);
-      padding: 15px 16px;
-    }
-
-    .notice .label {
-      margin-bottom: 8px;
-      color: var(--famtec);
-    }
-
-    .notice p {
-      margin: 0;
-      color: var(--ink-soft);
-      font-size: 14px;
-      line-height: 1.48;
-    }
-
-    .instruction-panel {
-      display: none;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 14px;
-      align-items: center;
-      margin-bottom: 18px;
-      border: 1px solid rgba(176, 200, 122, 0.56);
-      background: rgba(176, 200, 122, 0.055);
-      padding: 14px 16px;
-    }
-
-    body.instruction-mode .instruction-panel {
-      display: grid;
-    }
-
-    .instruction-copy {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      min-width: 0;
-    }
-
-    .instruction-step {
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-      width: 34px;
-      height: 34px;
-      border: 1px solid var(--famtec);
-      color: var(--famtec);
-      font-family: var(--mono);
-      font-size: 11px;
-    }
-
-    .instruction-copy strong {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--ink);
-      font-size: 14px;
-    }
-
-    .instruction-copy p {
-      margin: 0;
-      color: var(--ink-soft);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    body.instruction-mode [data-guide] {
-      border-color: rgba(176, 200, 122, 0.72);
-    }
-
-    body.instruction-mode [data-guide]::after {
-      content: attr(data-guide);
-      position: absolute;
-      top: 9px;
-      right: 9px;
-      border: 1px solid rgba(176, 200, 122, 0.42);
-      color: var(--famtec);
-      background: #070707;
-      padding: 3px 7px;
-      font-family: var(--mono);
-      font-size: 10px;
-      text-transform: uppercase;
-      pointer-events: none;
-    }
-
     .run-strip {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 96px;
@@ -463,8 +308,7 @@
       background: #0c0c0c;
     }
 
-    .run-strip input,
-    .search input {
+    .run-strip input, .search input {
       min-width: 0;
       border: 0;
       color: var(--ink);
@@ -476,15 +320,13 @@
       font-style: italic;
     }
 
-    .run-strip input {
-      min-height: 45px;
-    }
+    .run-strip input { min-height: 45px; }
 
     .run-strip button {
       border: 0;
       border-left: 1px solid var(--line-2);
       color: #11130c;
-      background: var(--famtec);
+      background: var(--accent);
       font-family: var(--mono);
       font-size: 11px;
       font-weight: 700;
@@ -510,25 +352,10 @@
       text-transform: uppercase;
     }
 
-    .chip.good {
-      border-color: rgba(176, 200, 122, 0.45);
-      color: var(--famtec);
-    }
-
-    .chip.cyan {
-      border-color: rgba(143, 188, 176, 0.45);
-      color: var(--cyan);
-    }
-
-    .chip.warn {
-      border-color: rgba(199, 166, 90, 0.45);
-      color: var(--gold);
-    }
-
-    .chip.danger {
-      border-color: rgba(200, 112, 96, 0.45);
-      color: var(--warn);
-    }
+    .chip.good { border-color: rgba(176, 200, 122, 0.45); color: var(--accent); }
+    .chip.cyan { border-color: rgba(143, 188, 176, 0.45); color: var(--cyan); }
+    .chip.warn { border-color: rgba(199, 166, 90, 0.45); color: var(--gold); }
+    .chip.danger { border-color: rgba(200, 112, 96, 0.45); color: var(--warn); }
 
     .grid {
       display: grid;
@@ -544,26 +371,16 @@
     .span-8 { grid-column: span 8; }
     .span-12 { grid-column: span 12; }
 
-    .card,
-    .metric,
-    .profile-button,
-    .row,
-    .profile-chip {
-      position: relative;
-    }
+    .card, .metric, .profile-button, .row, .profile-chip { position: relative; }
 
     .card {
       min-height: 145px;
       padding: 14px;
     }
 
-    .card .label {
-      margin-bottom: 10px;
-      color: var(--ink-faint);
-    }
+    .card .label { margin-bottom: 10px; color: var(--ink-faint); }
 
-    .card h3,
-    .card h4 {
+    .card h3, .card h4 {
       margin: 0 0 10px;
       color: var(--ink);
       font-family: var(--serif);
@@ -586,10 +403,7 @@
       margin-bottom: 22px;
     }
 
-    .metric {
-      min-height: 90px;
-      padding: 14px;
-    }
+    .metric { min-height: 90px; padding: 14px; }
 
     .metric strong {
       display: block;
@@ -615,25 +429,15 @@
       font-size: 12px;
       line-height: 1.8;
       overflow-x: auto;
+      white-space: pre;
     }
 
-    .terminal .ok {
-      color: var(--ok);
-    }
+    .terminal .ok { color: var(--ok); }
+    .terminal .faint { color: var(--ink-faint); }
 
-    .terminal .faint {
-      color: var(--ink-faint);
-    }
+    .rows, .profile-list, .project-list { display: grid; gap: 8px; }
 
-    .rows,
-    .profile-list,
-    .project-list {
-      display: grid;
-      gap: 8px;
-    }
-
-    .row,
-    .profile-chip {
+    .row, .profile-chip {
       display: flex;
       justify-content: space-between;
       gap: 12px;
@@ -643,25 +447,16 @@
       padding: 8px 0;
     }
 
-    .row:last-child,
-    .profile-chip:last-child {
-      border-bottom: 0;
-    }
+    .row:last-child, .profile-chip:last-child { border-bottom: 0; }
 
-    .row strong,
-    .profile-chip strong {
+    .row strong, .profile-chip strong {
       display: block;
       color: var(--ink-soft);
       font-size: 13px;
       font-weight: 700;
     }
 
-    .row span,
-    .profile-chip span,
-    .small {
-      color: var(--ink-faint);
-      font-size: 12px;
-    }
+    .row span, .profile-chip span, .small { color: var(--ink-faint); font-size: 12px; }
 
     .command-row {
       display: grid;
@@ -673,15 +468,9 @@
       padding: 0 12px;
     }
 
-    .command-row:last-child {
-      border-bottom: 0;
-    }
+    .command-row:last-child { border-bottom: 0; }
 
-    code {
-      color: var(--ink-soft);
-      font-size: 12px;
-      overflow-wrap: anywhere;
-    }
+    code { color: var(--ink-soft); font-size: 12px; overflow-wrap: anywhere; }
 
     .copy {
       display: grid;
@@ -693,16 +482,8 @@
       background: transparent;
     }
 
-    .copy:hover,
-    .copy[data-copied="true"] {
-      border-color: var(--famtec);
-      color: var(--famtec);
-    }
-
-    .copy svg {
-      width: 14px;
-      height: 14px;
-    }
+    .copy:hover, .copy[data-copied="true"] { border-color: var(--accent); color: var(--accent); }
+    .copy svg { width: 14px; height: 14px; }
 
     .search-tools {
       display: grid;
@@ -711,8 +492,7 @@
       margin-bottom: 14px;
     }
 
-    .search,
-    .provider-filter {
+    .search, .provider-filter {
       min-height: 40px;
       border: 1px solid var(--line-2);
       background: #0c0c0c;
@@ -739,8 +519,7 @@
       table-layout: fixed;
     }
 
-    .token-table th,
-    .token-table td {
+    .token-table th, .token-table td {
       height: 46px;
       border-bottom: 1px solid var(--line);
       padding: 0 11px;
@@ -748,24 +527,10 @@
       font-size: 12px;
     }
 
-    .token-table th {
-      color: var(--ink-faint);
-      font-weight: 500;
-      text-transform: uppercase;
-    }
-
-    .token-table td {
-      color: var(--ink-soft);
-    }
-
-    .token-table tr:last-child td {
-      border-bottom: 0;
-    }
-
-    .token-name {
-      color: var(--ink);
-      font-size: 12px;
-    }
+    .token-table th { color: var(--ink-faint); font-weight: 500; text-transform: uppercase; }
+    .token-table td { color: var(--ink-soft); }
+    .token-table tr:last-child td { border-bottom: 0; }
+    .token-name { color: var(--ink); font-size: 12px; }
 
     .provider {
       display: inline-flex;
@@ -821,10 +586,64 @@
       font-size: 12px;
     }
 
-    .integration-steps {
+    .share-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .share-card {
+      border: 1px solid var(--line);
+      background: rgba(17, 17, 17, 0.72);
+      padding: 18px;
+    }
+
+    .share-card .label { margin-bottom: 8px; }
+
+    .share-card h4 {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 600;
+    }
+
+    .share-card p {
+      margin: 0 0 14px;
+      color: var(--ink-soft);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .share-select-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: rgba(17, 17, 17, 0.72);
+    }
+
+    .share-select-row label {
+      color: var(--ink-faint);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .share-select-row select {
+      flex: 1;
+      min-height: 32px;
+      border: 1px solid var(--line-2);
+      color: var(--ink);
+      background: #080808;
+      outline: none;
+      padding: 0 8px;
+      font-family: var(--mono);
+      font-size: 12px;
     }
 
     .empty {
@@ -838,47 +657,29 @@
       font-size: 13px;
     }
 
-    .mobile-preview {
-      min-height: 520px;
-      padding: 26px 20px;
-      background:
-        radial-gradient(circle at 50% 5%, rgba(143, 188, 176, 0.08), transparent 18rem),
-        rgba(12, 12, 12, 0.86);
+    .onboarding {
+      border: 1px dashed var(--line-2);
+      padding: 32px 24px;
+      text-align: center;
     }
 
-    .mobile-preview h4 {
-      margin: 0 0 18px;
+    .onboarding h3 {
+      margin: 0 0 10px;
       color: var(--ink);
       font-family: var(--serif);
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 600;
     }
 
-    .mobile-code {
-      display: inline-flex;
-      border: 1px solid rgba(143, 188, 176, 0.45);
-      color: var(--cyan);
-      padding: 8px 14px;
-      font-size: 13px;
-      letter-spacing: 0.18em;
-    }
-
-    .mobile-question {
-      margin-top: 26px;
-      border-left: 3px solid var(--cyan);
-      padding-left: 18px;
+    .onboarding p {
+      margin: 0 0 20px;
       color: var(--ink-soft);
-      font-family: var(--serif);
-      font-size: 23px;
-      font-style: italic;
-      line-height: 1.45;
+      font-size: 14px;
+      line-height: 1.5;
     }
 
     @media (max-width: 1220px) {
-      .workspace {
-        grid-template-columns: 250px minmax(0, 1fr);
-      }
-
+      .workspace { grid-template-columns: 230px minmax(0, 1fr); }
       .right-rail {
         grid-column: 1 / -1;
         display: grid;
@@ -887,65 +688,24 @@
         border-left: 0;
         border-top: 1px solid var(--line);
       }
-
-      .metric-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 860px) {
-      .masthead {
-        min-height: 156px;
-      }
-
-      .brand,
-      .control-cluster {
-        position: static;
-        padding: 20px 18px 0;
-      }
-
-      .control-cluster {
-        justify-items: start;
-        padding-top: 12px;
-      }
-
-      .wordmark {
-        font-size: 26px;
-      }
-
-      .status-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .workspace {
-        grid-template-columns: 1fr;
-      }
-
-      .left-rail,
-      .right-rail {
+      .masthead { min-height: 156px; }
+      .brand, .control-cluster { position: static; padding: 20px 18px 0; }
+      .control-cluster { justify-items: start; padding-top: 12px; }
+      .wordmark { font-size: 26px; }
+      .status-grid { grid-template-columns: 1fr 1fr; }
+      .workspace { grid-template-columns: 1fr; }
+      .left-rail, .right-rail {
         border-right: 0;
         border-left: 0;
         border-bottom: 1px solid var(--line);
       }
-
-      .main {
-        padding: 20px 18px;
-      }
-
-      .span-3,
-      .span-4,
-      .span-5,
-      .span-6,
-      .span-7,
-      .span-8 {
-        grid-column: span 12;
-      }
-
-      .integration-steps,
-      .split,
-      .search-tools {
-        grid-template-columns: 1fr;
-      }
+      .main { padding: 20px 18px; }
+      .span-3, .span-4, .span-5, .span-6, .span-7, .span-8 { grid-column: span 12; }
+      .split, .search-tools, .share-grid { grid-template-columns: 1fr; }
     }
 
     .modal-backdrop {
@@ -958,9 +718,7 @@
       justify-content: center;
     }
 
-    .modal-backdrop.open {
-      display: flex;
-    }
+    .modal-backdrop.open { display: flex; }
 
     .modal {
       width: min(480px, 94vw);
@@ -977,9 +735,7 @@
       font-weight: 600;
     }
 
-    .field {
-      margin-bottom: 14px;
-    }
+    .field { margin-bottom: 14px; }
 
     .field label {
       display: block;
@@ -991,8 +747,7 @@
       letter-spacing: 0.16em;
     }
 
-    .field input,
-    .field select {
+    .field input, .field select {
       width: 100%;
       min-height: 40px;
       border: 1px solid var(--line-2);
@@ -1004,10 +759,7 @@
       font-size: 13px;
     }
 
-    .field input:focus,
-    .field select:focus {
-      border-color: var(--famtec);
-    }
+    .field input:focus, .field select:focus { border-color: var(--accent); }
 
     .field-hint {
       margin: 5px 0 0;
@@ -1034,24 +786,20 @@
       font-size: 12px;
     }
 
-    .modal-error.visible {
-      display: block;
-    }
+    .modal-error.visible { display: block; }
 
     .modal-success {
       display: none;
       margin-bottom: 14px;
       border: 1px solid rgba(176, 200, 122, 0.45);
-      color: var(--famtec);
+      color: var(--accent);
       background: rgba(176, 200, 122, 0.07);
       padding: 10px 12px;
       font-family: var(--mono);
       font-size: 12px;
     }
 
-    .modal-success.visible {
-      display: block;
-    }
+    .modal-success.visible { display: block; }
 
     .icon-btn {
       display: inline-grid;
@@ -1065,20 +813,9 @@
       flex-shrink: 0;
     }
 
-    .icon-btn:hover {
-      border-color: var(--warn);
-      color: var(--warn);
-    }
-
-    .icon-btn.attach:hover {
-      border-color: var(--famtec);
-      color: var(--famtec);
-    }
-
-    .icon-btn svg {
-      width: 13px;
-      height: 13px;
-    }
+    .icon-btn:hover { border-color: var(--warn); color: var(--warn); }
+    .icon-btn.attach:hover { border-color: var(--accent); color: var(--accent); }
+    .icon-btn svg { width: 13px; height: 13px; }
 
     .project-list-head {
       display: flex;
@@ -1087,9 +824,7 @@
       margin-bottom: 10px;
     }
 
-    .project-list-head .label {
-      margin: 0;
-    }
+    .project-list-head .label { margin: 0; }
 
     .attach-form {
       display: none;
@@ -1099,9 +834,7 @@
       border-top: 1px solid var(--line);
     }
 
-    .attach-form.open {
-      display: flex;
-    }
+    .attach-form.open { display: flex; }
 
     .attach-form select {
       flex: 1;
@@ -1115,110 +848,23 @@
       font-size: 11px;
     }
 
-    .onboarding {
-      border: 1px dashed var(--line-2);
-      padding: 32px 24px;
-      text-align: center;
-    }
-
-    .onboarding h3 {
-      margin: 0 0 10px;
-      color: var(--ink);
-      font-family: var(--serif);
-      font-size: 24px;
-      font-weight: 600;
-    }
-
-    .onboarding p {
-      margin: 0 0 20px;
-      color: var(--ink-soft);
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
     @media (max-width: 560px) {
-      .subtitle {
-        max-width: 100%;
-        line-height: 1.55;
-        white-space: normal;
-      }
-
-      .top-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        justify-content: flex-start;
-        width: 100%;
-      }
-
-      .top-actions .btn {
-        width: 100%;
-      }
-
-      .section-head {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .workspace {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .main {
-        order: 1;
-      }
-
-      .left-rail {
-        order: 2;
-      }
-
-      .right-rail {
-        order: 3;
-      }
-
-      .status-grid,
-      .metric-grid,
-      .right-rail {
-        grid-template-columns: 1fr;
-      }
-
-      .status-cell {
-        align-items: flex-start;
-        flex-direction: column;
-        justify-content: center;
-        gap: 4px;
-        min-height: 46px;
-        white-space: normal;
-      }
-
-      .status-cell strong {
-        white-space: normal;
-      }
-
-      .tab {
-        min-width: 126px;
-      }
-
-      .notice p,
-      .card p,
-      .mobile-question {
-        overflow-wrap: anywhere;
-      }
-
-      .run-strip {
-        grid-template-columns: 1fr;
-      }
-
-      .run-strip button {
-        min-height: 42px;
-        border-left: 0;
-        border-top: 1px solid var(--line-2);
-      }
-
-      .token-table th:nth-child(4),
-      .token-table td:nth-child(4) {
-        display: none;
-      }
+      .subtitle { max-width: 100%; line-height: 1.55; white-space: normal; }
+      .top-actions { display: grid; grid-template-columns: 1fr 1fr; justify-content: flex-start; width: 100%; }
+      .top-actions .btn { width: 100%; }
+      .section-head { align-items: flex-start; flex-direction: column; }
+      .workspace { display: flex; flex-direction: column; }
+      .main { order: 1; }
+      .left-rail { order: 2; }
+      .right-rail { order: 3; }
+      .status-grid, .metric-grid, .right-rail { grid-template-columns: 1fr; }
+      .status-cell { align-items: flex-start; flex-direction: column; justify-content: center; gap: 4px; min-height: 46px; white-space: normal; }
+      .status-cell strong { white-space: normal; }
+      .tab { min-width: 126px; }
+      .card p { overflow-wrap: anywhere; }
+      .run-strip { grid-template-columns: 1fr; }
+      .run-strip button { min-height: 42px; border-left: 0; border-top: 1px solid var(--line-2); }
+      .token-table th:nth-child(4), .token-table td:nth-child(4) { display: none; }
     }
   </style>
 </head>
@@ -1226,65 +872,64 @@
   <div class="shell">
     <header class="masthead">
       <div class="brand">
-        <h1 class="wordmark" id="brand-wordmark">K E Y T <span class="accent">E</span> C</h1>
-        <p class="subtitle" id="brand-title">Local credential infrastructure - FAMTEC / runtime</p>
+        <h1 class="wordmark">K E Y T <span class="accent">E</span> C</h1>
+        <p class="subtitle" id="brand-subtitle">API key manager &mdash; no cloud, no account</p>
       </div>
 
       <div class="control-cluster">
-        <div class="build-line"><span id="clock">--:--:--</span> &nbsp; Build <span id="version-badge">v0.1.0</span> - local keychain - no cloud</div>
+        <div class="build-line"><span id="clock">--:--:--</span> &nbsp; <span id="version-badge">v0.1.0</span> &mdash; keys stored in macOS Keychain</div>
         <div class="top-actions">
-          <button class="btn" id="jump-keychain" type="button">KEYCHAIN</button>
-          <button class="btn" id="jump-profiles" type="button">PROFILES</button>
-          <button class="btn learn-toggle" id="instruction-toggle" type="button" aria-pressed="false">Instruction Mode</button>
-          <button class="btn primary" id="open-add-token" type="button">+ Add Token</button>
+          <button class="btn" id="jump-keys" type="button">Keys</button>
+          <button class="btn" id="jump-projects" type="button">Projects</button>
+          <button class="btn primary" id="open-add-token" type="button">+ Add Key</button>
         </div>
         <div class="access-line" id="vault-status-line">Local keychain &mdash; no cloud</div>
       </div>
     </header>
 
-    <section class="status-grid" aria-label="Runtime status">
+    <section class="status-grid" aria-label="Status">
       <div class="status-cell"><span><i class="dot"></i>KEYCHAIN</span><strong id="strip-keychain">checking</strong></div>
-      <div class="status-cell"><span><i class="dot"></i>PROFILES</span><strong id="strip-profiles">0 configured</strong></div>
-      <div class="status-cell"><span><i class="dot warn"></i>TOKENS</span><strong id="strip-tokens">0 attached</strong></div>
-      <div class="status-cell"><span><i class="dot info"></i>RUNTIME</span><strong id="strip-runtime">env injection</strong></div>
-      <div class="status-cell"><span><i class="dot"></i>SOURCE</span><strong>local machine</strong></div>
+      <div class="status-cell"><span><i class="dot"></i>PROJECTS</span><strong id="strip-profiles">0 set up</strong></div>
+      <div class="status-cell"><span><i class="dot warn"></i>KEYS</span><strong id="strip-tokens">0 stored</strong></div>
+      <div class="status-cell"><span><i class="dot info"></i>STORAGE</span><strong>local only</strong></div>
+      <div class="status-cell"><span><i class="dot"></i>CLOUD</span><strong>none</strong></div>
       <div class="status-cell"><span><i class="dot"></i>PLATFORM</span><strong id="strip-platform">local</strong></div>
     </section>
 
     <nav class="module-tabs" aria-label="Sections">
-      <button class="tab" type="button" aria-selected="true" data-view-button="dashboard">Dashboard</button>
-      <button class="tab" type="button" aria-selected="false" data-view-button="tokens">Tokens</button>
+      <button class="tab" type="button" aria-selected="true"  data-view-button="dashboard">Dashboard</button>
+      <button class="tab" type="button" aria-selected="false" data-view-button="keys">Keys</button>
       <button class="tab" type="button" aria-selected="false" data-view-button="projects">Projects</button>
-      <button class="tab" type="button" aria-selected="false" data-view-button="github">GitHub Sync</button>
+      <button class="tab" type="button" aria-selected="false" data-view-button="share">Share</button>
       <button class="tab" type="button" aria-selected="false" data-view-button="settings">Settings</button>
     </nav>
 
     <section class="workspace">
       <aside class="left-rail">
         <div class="project-list-head">
-          <p class="label">Vault Profiles</p>
+          <p class="label">Your Projects</p>
           <button class="btn" id="rail-new-profile" type="button" style="min-height:24px;font-size:10px;padding:0 8px;">+ New</button>
         </div>
         <div class="profile-list" id="rail-profiles"></div>
 
         <section class="panel" style="margin-top:22px;">
-          <div class="panel-head"><h3>Vault Stats</h3><span class="chip good" id="profile-count-tag">0</span></div>
+          <div class="panel-head"><h3>Summary</h3><span class="chip good" id="profile-count-tag">0 projects</span></div>
           <div class="panel-body">
             <div class="rows">
-              <div class="row"><div><strong>Token handles</strong><span>Across all profiles</span></div><span id="token-count-rail">0</span></div>
-              <div class="row"><div><strong>GitHub sync</strong><span>Manual boundary</span></div><span>ready</span></div>
-              <div class="row"><div><strong>Storage</strong><span>No cloud backend</span></div><span>local</span></div>
+              <div class="row"><div><strong>API keys stored</strong><span>Total across all projects</span></div><span id="token-count-rail">0</span></div>
+              <div class="row"><div><strong>GitHub sync</strong><span>Push to Actions Secrets</span></div><span>ready</span></div>
+              <div class="row"><div><strong>Storage</strong><span>macOS Keychain only</span></div><span>local</span></div>
             </div>
           </div>
         </section>
 
         <section class="panel">
-          <div class="panel-head"><h3>Security Boundary</h3><span class="chip good">local</span></div>
+          <div class="panel-head"><h3>How it works</h3><span class="chip good">secure</span></div>
           <div class="panel-body">
             <div class="rows">
-              <div class="row"><div><strong>No plaintext storage</strong><span>macOS Keychain service</span></div><span class="chip good">OK</span></div>
-              <div class="row"><div><strong>No secret logs</strong><span>values stay masked</span></div><span class="chip good">OK</span></div>
-              <div class="row"><div><strong>Runtime only</strong><span>ephemeral environment</span></div><span class="chip cyan">ENV</span></div>
+              <div class="row"><div><strong>Keys in macOS Keychain</strong><span>Never stored in files</span></div><span class="chip good">OK</span></div>
+              <div class="row"><div><strong>Values never shown</strong><span>Only key names are displayed</span></div><span class="chip good">OK</span></div>
+              <div class="row"><div><strong>No account needed</strong><span>Runs entirely offline</span></div><span class="chip cyan">local</span></div>
             </div>
           </div>
         </section>
@@ -1294,95 +939,75 @@
         <section class="section-head">
           <div>
             <h2 id="view-title">Dashboard</h2>
-            <p id="view-subtitle">Vault state, profiles, and runtime commands.</p>
+            <p id="view-subtitle">Your API keys and projects at a glance.</p>
           </div>
           <span class="chip good" id="keychain-status">checking</span>
         </section>
 
-        <section class="instruction-panel" id="instruction-panel" aria-live="polite">
-          <div class="instruction-copy">
-            <span class="instruction-step" id="instruction-step">01</span>
-            <div>
-              <strong id="instruction-title">Start with the runtime loop</strong>
-              <p id="instruction-text">Add one provider key, create a project profile, attach the key, then run your app through the profile.</p>
-            </div>
-          </div>
-          <button class="btn" type="button" id="instruction-next">Next</button>
-        </section>
-
+        <!-- Dashboard -->
         <section class="view" data-view="dashboard" data-active="true">
-          <section class="notice" data-guide="prototype boundary">
-            <p class="label">Prototype Integration Boundary</p>
-            <p>Keytec is shown as a local FAMTEC module for workflow testing. The vault stores provider handles in the OS keychain, maps them to project profiles, and injects them into runtime commands without writing a .env file.</p>
-          </section>
-
-          <div class="run-strip" data-guide="runtime command">
-            <input id="runtime-command" value="famtec run openclaw -- npm run dev" aria-label="Runtime command">
+          <div class="run-strip">
+            <input id="runtime-command" value="famtec run openclaw -- npm run dev" aria-label="Run command">
             <button id="runtime-copy" type="button" data-copy-command="famtec run openclaw -- npm run dev">Copy</button>
           </div>
           <div class="filters">
-            <span class="chip good">local only</span>
+            <span class="chip good">no cloud</span>
             <span class="chip">no account</span>
-            <span class="chip cyan">keychain</span>
-            <span class="chip">runtime env</span>
-            <span class="chip warn">manual GitHub sync</span>
+            <span class="chip cyan">macOS Keychain</span>
+            <span class="chip">keys never written to disk</span>
           </div>
 
           <div class="metric-grid">
-            <article class="metric" data-guide="token handles"><strong id="token-count">0</strong><span class="metric-label">Tokens secured</span></article>
-            <article class="metric" data-guide="profiles"><strong id="profile-count">0</strong><span class="metric-label">Projects configured</span></article>
-            <article class="metric"><strong id="integration-count">0</strong><span class="metric-label">Runtime checks</span></article>
+            <article class="metric"><strong id="token-count">0</strong><span class="metric-label">Keys stored</span></article>
+            <article class="metric"><strong id="profile-count">0</strong><span class="metric-label">Projects</span></article>
+            <article class="metric"><strong id="integration-count">0</strong><span class="metric-label">Keys in use</span></article>
             <article class="metric"><strong>0</strong><span class="metric-label">Alerts</span></article>
           </div>
 
           <div class="grid">
-            <article class="card span-6" data-guide="vault workflow">
-              <p class="label">MVP Runtime Path</p>
-              <h3>Store once. Attach to project. Inject at runtime.</h3>
-              <p>The preferred command is intentionally short enough to beat a handwritten .env file in everyday work.</p>
-              <div class="terminal" style="margin-top:14px;">
-                <div>$ famtec add together</div>
-                <div class="ok">OK token saved to keychain</div>
-                <div>$ famtec run openclaw -- npm run dev</div>
-                <div class="ok">OK API keys injected</div>
-                <div class="faint">values masked, no file written</div>
-              </div>
+            <article class="card span-6">
+              <p class="label">How to use Keytec</p>
+              <h3>Store a key, attach it to a project, run.</h3>
+              <p>Keytec injects your API keys when you run a command. Nothing is written to a file.</p>
+              <div class="terminal" style="margin-top:14px;"><span>$ famtec add together</span>
+<span class="ok">✓ saved to Keychain</span>
+<span>$ famtec run openclaw -- npm run dev</span>
+<span class="ok">✓ keys injected as env vars</span>
+<span class="faint">no .env file written</span></div>
             </article>
 
-            <article class="card span-6" data-guide="activity">
-              <p class="label">Activity Ledger</p>
+            <article class="card span-6">
+              <p class="label">Recent activity</p>
               <div class="rows" id="activity-list"></div>
             </article>
 
             <div class="span-12" id="dashboard-onboarding" style="display:none;">
               <div class="onboarding">
-                <h3>Vault is empty</h3>
+                <h3>No keys yet</h3>
                 <p>Add your first API key to get started. It will be stored in macOS Keychain — never in a file.</p>
-                <button class="btn primary" type="button" id="onboarding-add-token">+ Add your first token</button>
+                <button class="btn primary" type="button" id="onboarding-add-token">+ Add your first key</button>
               </div>
             </div>
           </div>
         </section>
 
-        <section class="view" data-view="tokens">
-          <section class="notice" data-guide="token table">
-            <p class="label">Token Handles</p>
-            <p>This module shows which provider handles are attached to local profiles. Real credential values never render in the UI, and the dashboard does not enumerate Keychain items.</p>
-          </section>
+        <!-- Keys -->
+        <section class="view" data-view="keys">
           <div class="search-tools">
-            <label class="search"><input id="token-search" type="search" placeholder="Search tokens, providers, projects..."></label>
-            <select class="provider-filter" id="provider-filter" aria-label="Provider filter"><option value="">All Providers</option></select>
+            <label class="search"><input id="token-search" type="search" placeholder="Search keys or projects..."></label>
+            <select class="provider-filter" id="provider-filter" aria-label="Filter by provider"><option value="">All keys</option></select>
           </div>
           <div class="table-shell" id="token-table-wrap"></div>
         </section>
 
+        <!-- Projects -->
         <section class="view" data-view="projects">
           <div class="section-head" style="margin-bottom:16px;">
             <div>
               <h2 style="margin:0;font-family:var(--serif);font-size:28px;font-weight:600;color:var(--ink);">Projects</h2>
-              <p style="margin:6px 0 0;color:var(--ink-faint);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.18em;">Each profile replaces a .env file</p>
+              <p style="margin:6px 0 0;color:var(--ink-faint);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.18em;">Each project groups the API keys it needs</p>
             </div>
-            <button class="btn primary" id="projects-new-profile" type="button">+ New Profile</button>
+            <button class="btn primary" id="projects-new-profile" type="button">+ New Project</button>
           </div>
           <div class="split">
             <div class="project-list" id="project-list"></div>
@@ -1390,8 +1015,8 @@
               <div class="panel-head">
                 <h3 id="project-detail-title">Project</h3>
                 <div style="display:flex;gap:6px;">
-                  <button class="btn" id="project-run-command" type="button" data-copy-command="famtec run openclaw -- npm run dev">Copy Run</button>
-                  <button class="icon-btn" id="project-delete-btn" title="Delete profile" style="border-color:var(--line-2);">
+                  <button class="btn" id="project-run-command" type="button" data-copy-command="famtec run openclaw -- npm run dev">Copy run command</button>
+                  <button class="icon-btn" id="project-delete-btn" title="Delete project" style="border-color:var(--line-2);">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
                   </button>
                 </div>
@@ -1399,58 +1024,86 @@
               <div class="panel-body">
                 <div class="rows" id="project-detail"></div>
                 <div class="attach-form" id="attach-form">
-                  <select id="attach-token-select" aria-label="Token to attach"></select>
-                  <button class="btn primary" id="attach-confirm" type="button" style="white-space:nowrap;">Attach</button>
+                  <select id="attach-token-select" aria-label="Key to add"></select>
+                  <button class="btn primary" id="attach-confirm" type="button" style="white-space:nowrap;">Add</button>
                   <button class="btn" id="attach-cancel" type="button">✕</button>
                 </div>
-                <button class="btn" id="attach-open" type="button" style="margin-top:12px;width:100%;">+ Attach Token</button>
+                <button class="btn" id="attach-open" type="button" style="margin-top:12px;width:100%;">+ Add Key to Project</button>
               </div>
             </div>
           </div>
         </section>
 
-        <section class="view" data-view="github">
-          <section class="notice" data-guide="sync boundary">
-            <p class="label">GitHub Integration Boundary</p>
-            <p>Sync is explicit. Nothing leaves the local machine until a profile is intentionally pushed to GitHub Actions Secrets.</p>
-          </section>
-          <div class="integration-steps">
-            <article class="card"><p class="label">1. Connect</p><h4>GitHub token or app</h4><code>famtec github connect</code><div style="margin-top:12px;"><span class="chip good">manual</span></div></article>
-            <article class="card"><p class="label">2. Sync</p><h4>Actions secrets</h4><code>famtec github sync openclaw owner/repo</code><div style="margin-top:12px;"><span class="chip good">explicit</span></div></article>
-            <article class="card"><p class="label">3. Build</p><h4>Use in workflow</h4><code>${{ secrets.TOGETHER_API_KEY }}</code><div style="margin-top:12px;"><span class="chip cyan">CI</span></div></article>
+        <!-- Share -->
+        <section class="view" data-view="share">
+          <div class="share-select-row">
+            <label for="share-profile-select">Project to share:</label>
+            <select id="share-profile-select"></select>
           </div>
-          <div class="grid" style="margin-top:12px;">
+
+          <div class="share-grid">
+            <div class="share-card">
+              <p class="label">Download</p>
+              <h4>Export as .env file</h4>
+              <p>Download a .env file with your real key values. Keep this file private — treat it like a password.</p>
+              <button class="btn primary" id="export-env-download" type="button">Download .env</button>
+            </div>
+
+            <div class="share-card">
+              <p class="label">Copy</p>
+              <h4>Copy as .env text</h4>
+              <p>Copy KEY=value pairs to your clipboard, ready to paste into any terminal or config.</p>
+              <button class="btn" id="export-env-copy" type="button">Copy .env text</button>
+            </div>
+
+            <div class="share-card">
+              <p class="label">GitHub Actions</p>
+              <h4>Sync to CI/CD</h4>
+              <p>Push your keys directly into GitHub Actions Secrets using the CLI.</p>
+              <code id="share-sync-command" style="display:block;margin-bottom:10px;">famtec github sync openclaw owner/repo</code>
+              <button class="btn" type="button" id="share-sync-copy" data-copy-command="">Copy command</button>
+            </div>
+          </div>
+
+          <div class="grid">
             <article class="card span-7">
-              <p class="label">Workflow YAML</p>
-              <div class="terminal">
-                <div>- name: Use FAMTEC secrets</div>
-                <div>&nbsp;&nbsp;env:</div>
-                <div>&nbsp;&nbsp;&nbsp;&nbsp;TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}</div>
-                <div>&nbsp;&nbsp;&nbsp;&nbsp;DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}</div>
-                <div>&nbsp;&nbsp;run: npm run build</div>
-              </div>
+              <p class="label">GitHub Actions YAML snippet</p>
+              <p style="margin-bottom:10px;">Paste this into your workflow to reference the secrets you synced.</p>
+              <div class="terminal" id="share-yaml-preview"></div>
+              <button class="btn" type="button" id="copy-yaml-btn" style="margin-top:10px;" data-copy-command="">Copy YAML</button>
             </article>
+
             <article class="card span-5">
-              <p class="label">Future Alert</p>
-              <h4>Provider key failed</h4>
-              <p>Health monitoring can route users back to local rotation commands without revealing secret values.</p>
-              <button class="btn" style="margin-top:16px;" type="button" data-copy-command="famtec add together">Copy rotate command</button>
+              <p class="label">Shell export</p>
+              <p style="margin-bottom:10px;">Paste into a terminal session to set keys temporarily.</p>
+              <div class="terminal" id="share-shell-preview"></div>
+              <button class="btn" type="button" id="copy-shell-btn" style="margin-top:10px;" data-copy-command="">Copy shell exports</button>
             </article>
           </div>
         </section>
 
+        <!-- Settings -->
         <section class="view" data-view="settings">
-          <section class="notice" data-guide="local state">
-            <p class="label">Local State</p>
-            <p>Settings keeps paths inspectable while credential values remain hidden behind the operating system keychain.</p>
-          </section>
           <div class="panel">
-            <div class="panel-head"><h3>Runtime Configuration</h3><span class="chip good">no account</span></div>
+            <div class="panel-head"><h3>Configuration</h3><span class="chip good">no account</span></div>
             <div class="panel-body">
               <div class="rows">
                 <div class="row"><div><strong>Project directory</strong><code id="project-dir"></code></div><span class="chip cyan">CLI</span></div>
-                <div class="row"><div><strong>Profile metadata</strong><code id="profile-file"></code></div><span class="chip">JSON</span></div>
-                <div class="row"><div><strong>Keychain service</strong><code id="service-name">famtec</code></div><span class="chip good" id="settings-keychain">checking</span></div>
+                <div class="row"><div><strong>Profiles file</strong><code id="profile-file"></code></div><span class="chip">JSON</span></div>
+                <div class="row"><div><strong>Keychain service name</strong><code id="service-name">famtec</code></div><span class="chip good" id="settings-keychain">checking</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h3>CLI reference</h3></div>
+            <div class="panel-body">
+              <div class="rows">
+                <div class="row"><div><strong>Add a key</strong><code>famtec add &lt;provider&gt;</code></div></div>
+                <div class="row"><div><strong>Create a project</strong><code>famtec profile create &lt;name&gt;</code></div></div>
+                <div class="row"><div><strong>Attach key to project</strong><code>famtec profile attach &lt;project&gt; &lt;key&gt;</code></div></div>
+                <div class="row"><div><strong>Run with injected keys</strong><code>famtec run &lt;project&gt; -- &lt;command&gt;</code></div></div>
+                <div class="row"><div><strong>Sync to GitHub</strong><code>famtec github sync &lt;project&gt; owner/repo</code></div></div>
               </div>
             </div>
           </div>
@@ -1458,50 +1111,51 @@
       </main>
 
       <aside class="right-rail">
-        <section class="panel" data-guide="health">
-          <div class="panel-head"><h3>Token Health</h3><span class="chip good" id="health-summary">ready</span></div>
+        <section class="panel">
+          <div class="panel-head"><h3>Key status</h3><span class="chip good" id="health-summary">ready</span></div>
           <div class="panel-body"><div class="rows" id="health-list"></div></div>
         </section>
 
-        <section class="panel" data-guide="copy commands">
-          <div class="panel-head"><h3>Quick Commands</h3><span class="chip">copy</span></div>
+        <section class="panel">
+          <div class="panel-head"><h3>Useful commands</h3><span class="chip">click to copy</span></div>
           <div id="commands"></div>
         </section>
 
-        <section class="mobile-preview">
-          <div class="mobile-code">KEYTEC</div>
-          <h4 style="margin-top:26px;">Ask this runtime a question</h4>
-          <div class="run-strip" style="grid-template-columns:minmax(0,1fr) 78px;">
-            <input id="mobile-question-input" value="What keys does this project need?" aria-label="Question preview">
-            <button id="mobile-ask" type="button">Ask</button>
+        <section class="panel">
+          <div class="panel-head"><h3>Quick help</h3></div>
+          <div class="panel-body">
+            <div class="run-strip" style="grid-template-columns:minmax(0,1fr) 72px;margin-bottom:0;">
+              <input id="mobile-question-input" value="What keys does openclaw need?" aria-label="Ask a question">
+              <button id="mobile-ask" type="button">Ask</button>
+            </div>
+            <p style="margin:12px 0 0;color:var(--ink-soft);font-size:13px;line-height:1.5;" id="mobile-answer">Ask anything about your projects or keys.</p>
           </div>
-          <p class="mobile-question" id="mobile-answer">I can explain which provider handles are attached to a profile without exposing their values.</p>
         </section>
       </aside>
     </section>
   </div>
 
-  <!-- Create Profile Modal -->
+  <!-- New Project Modal -->
   <div class="modal-backdrop" id="create-profile-backdrop" role="dialog" aria-modal="true" aria-labelledby="cp-modal-title">
     <div class="modal">
-      <h3 id="cp-modal-title">New Profile</h3>
+      <h3 id="cp-modal-title">New Project</h3>
       <div class="modal-error" id="cp-modal-error"></div>
       <div class="field">
-        <label for="cp-modal-name">Profile name</label>
+        <label for="cp-modal-name">Project name</label>
         <input id="cp-modal-name" type="text" placeholder="e.g. openclaw, my-app, website" autocomplete="off">
         <p class="field-hint">Letters, numbers, dots, hyphens, underscores only.</p>
       </div>
       <div class="modal-actions">
         <button class="btn" type="button" id="cp-modal-cancel">Cancel</button>
-        <button class="btn primary" type="button" id="cp-modal-save">Create Profile</button>
+        <button class="btn primary" type="button" id="cp-modal-save">Create Project</button>
       </div>
     </div>
   </div>
 
-  <!-- Add Token Modal -->
+  <!-- Add Key Modal -->
   <div class="modal-backdrop" id="add-token-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal">
-      <h3 id="modal-title">Add API Token</h3>
+      <h3 id="modal-title">Add API Key</h3>
       <div class="modal-error" id="modal-error"></div>
       <div class="modal-success" id="modal-success"></div>
       <div class="field">
@@ -1518,11 +1172,11 @@
         <p class="field-hint" id="modal-key-preview"></p>
       </div>
       <div class="field">
-        <label for="modal-secret">API Key</label>
+        <label for="modal-secret">API Key value</label>
         <input id="modal-secret" type="password" placeholder="Paste your key here" autocomplete="off">
       </div>
       <div class="field">
-        <label for="modal-profile">Attach to Profile (optional)</label>
+        <label for="modal-profile">Add to project (optional)</label>
         <select id="modal-profile">
           <option value="">— none —</option>
         </select>
@@ -1536,65 +1190,24 @@
 
   <script>
     const titles = {
-      dashboard: ["Dashboard", "Vault state, profiles, and runtime commands."],
-      tokens: ["Tokens", "Manage local token handles without revealing values."],
-      projects: ["Projects", "Group token handles into runtime profiles."],
-      github: ["GitHub Sync", "Explicit profile sync for GitHub Actions Secrets."],
-      settings: ["Settings", "Local paths and runtime checks."]
-    };
-
-    const instructionSteps = {
-      dashboard: {
-        step: "01",
-        title: "Start with the runtime loop",
-        text: "Add one provider key, create a project profile, attach the key, then run the app through that profile.",
-        next: "tokens"
-      },
-      tokens: {
-        step: "02",
-        title: "Token handles stay masked",
-        text: "The token table confirms which provider handles exist. It must never show the real credential value.",
-        next: "projects"
-      },
-      projects: {
-        step: "03",
-        title: "Profiles replace project .env files",
-        text: "A profile is the set of provider handles a project needs when the runtime command starts.",
-        next: "github"
-      },
-      github: {
-        step: "04",
-        title: "Sync is deliberate",
-        text: "Nothing leaves the machine unless the user explicitly syncs a profile into GitHub Actions Secrets.",
-        next: "settings"
-      },
-      settings: {
-        step: "05",
-        title: "Local state stays inspectable",
-        text: "Settings shows readiness and local metadata paths while secret values remain hidden.",
-        next: "dashboard"
-      }
+      dashboard: ["Dashboard",  "Your API keys and projects at a glance."],
+      keys:      ["Keys",       "All API keys stored in your local Keychain."],
+      projects:  ["Projects",   "Group keys by project — no more .env files."],
+      share:     ["Share",      "Export or share keys from any project."],
+      settings:  ["Settings",   "Local paths and configuration."]
     };
 
     const params = new URLSearchParams(window.location.search);
     const requestedView = params.get("view");
-    const instructionOverride = params.get("instruction");
 
     const state = {
       profiles: [],
       commands: [],
       tokens: [],
       selectedProject: "",
-      activeView: titles[requestedView] ? requestedView : "dashboard",
-      instructionMode: instructionOverride === null
-        ? localStorage.getItem("keytec-instruction-mode") === "true"
-        : instructionOverride === "1"
+      activeView: titles[requestedView] ? requestedView : "dashboard"
     };
 
-    const instructionToggle = document.getElementById("instruction-toggle");
-    document.body.classList.toggle("instruction-mode", state.instructionMode);
-    instructionToggle.setAttribute("aria-pressed", String(state.instructionMode));
-    updateInstructionPanel();
     updateClock();
     window.setInterval(updateClock, 1000);
 
@@ -1602,36 +1215,24 @@
       button.addEventListener("click", () => activateView(button.dataset.viewButton));
     });
 
-    document.getElementById("jump-keychain").addEventListener("click", () => activateView("tokens"));
-    document.getElementById("jump-profiles").addEventListener("click", () => activateView("projects"));
-
-    instructionToggle.addEventListener("click", () => {
-      state.instructionMode = !state.instructionMode;
-      document.body.classList.toggle("instruction-mode", state.instructionMode);
-      instructionToggle.setAttribute("aria-pressed", String(state.instructionMode));
-      localStorage.setItem("keytec-instruction-mode", String(state.instructionMode));
-      updateInstructionPanel();
-    });
-
-    document.getElementById("instruction-next").addEventListener("click", () => {
-      activateView(instructionSteps[state.activeView].next);
-    });
+    document.getElementById("jump-keys").addEventListener("click", () => activateView("keys"));
+    document.getElementById("jump-projects").addEventListener("click", () => activateView("projects"));
 
     document.addEventListener("click", (event) => {
       const button = event.target.closest("[data-copy-command]");
       if (!button) return;
-      navigator.clipboard?.writeText(button.dataset.copyCommand).catch(() => {});
+      const text = button.dataset.copyCommand;
+      if (!text) return;
+      navigator.clipboard?.writeText(text).catch(() => {});
       button.dataset.copied = "true";
-      window.setTimeout(() => {
-        delete button.dataset.copied;
-      }, 900);
+      window.setTimeout(() => { delete button.dataset.copied; }, 900);
     });
 
     document.getElementById("token-search").addEventListener("input", renderTokenTable);
     document.getElementById("provider-filter").addEventListener("change", renderTokenTable);
-    document.getElementById("mobile-ask").addEventListener("click", answerMobileQuestion);
+    document.getElementById("mobile-ask").addEventListener("click", answerQuestion);
     document.getElementById("mobile-question-input").addEventListener("keydown", (event) => {
-      if (event.key === "Enter") answerMobileQuestion();
+      if (event.key === "Enter") answerQuestion();
     });
     document.getElementById("runtime-command").addEventListener("input", (event) => {
       document.getElementById("runtime-copy").dataset.copyCommand = event.target.value;
@@ -1665,21 +1266,12 @@
       });
       document.getElementById("view-title").textContent = titles[view][0];
       document.getElementById("view-subtitle").textContent = titles[view][1];
-      updateInstructionPanel();
-    }
-
-    function updateInstructionPanel() {
-      const guide = instructionSteps[state.activeView];
-      document.getElementById("instruction-step").textContent = guide.step;
-      document.getElementById("instruction-title").textContent = guide.title;
-      document.getElementById("instruction-text").textContent = guide.text;
+      if (view === "share") renderShare();
     }
 
     function updateClock() {
       document.getElementById("clock").textContent = new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit"
+        hour: "2-digit", minute: "2-digit", second: "2-digit"
       });
     }
 
@@ -1687,23 +1279,23 @@
       return {
         app: "Keytec API Wallet",
         service: "famtec",
-        projectDir: "Prototype preview",
+        projectDir: "local preview",
         platform: "darwin",
         version: "0.1.0",
         cliReady: true,
         keychainReady: true,
         profilesPath: "~/.famtec/profiles.json",
         profiles: [
-          { name: "openclaw", providers: ["TOGETHER_API_KEY", "DEEPSEEK_API_KEY"] },
-          { name: "archai", providers: ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"] },
-          { name: "famtec-exchange", providers: ["OPENAI_API_KEY", "GITHUB_TOKEN"] }
+          { name: "openclaw",      providers: ["TOGETHER_API_KEY", "DEEPSEEK_API_KEY"] },
+          { name: "archai",        providers: ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"] },
+          { name: "my-app",        providers: ["OPENAI_API_KEY", "GITHUB_TOKEN"] }
         ],
         tokens: [
-          { provider: "TOGETHER_API_KEY", attachedProfiles: ["openclaw"], storedInKeychain: true },
-          { provider: "DEEPSEEK_API_KEY", attachedProfiles: ["openclaw"], storedInKeychain: true },
-          { provider: "OPENAI_API_KEY", attachedProfiles: ["archai", "famtec-exchange"], storedInKeychain: true },
-          { provider: "ANTHROPIC_API_KEY", attachedProfiles: ["archai"], storedInKeychain: false },
-          { provider: "GITHUB_TOKEN", attachedProfiles: ["famtec-exchange"], storedInKeychain: true }
+          { provider: "TOGETHER_API_KEY",  attachedProfiles: ["openclaw"],       storedInKeychain: true },
+          { provider: "DEEPSEEK_API_KEY",  attachedProfiles: ["openclaw"],       storedInKeychain: true },
+          { provider: "OPENAI_API_KEY",    attachedProfiles: ["archai","my-app"],storedInKeychain: true },
+          { provider: "ANTHROPIC_API_KEY", attachedProfiles: ["archai"],         storedInKeychain: false },
+          { provider: "GITHUB_TOKEN",      attachedProfiles: ["my-app"],         storedInKeychain: true }
         ],
         commands: [
           "famtec add together",
@@ -1718,24 +1310,20 @@
     }
 
     function renderStatus(payload) {
-      const appName = payload.app || "Keytec API Wallet";
       const version = payload.version || "0.1.0";
       const keychainReady = Boolean(payload.keychainReady);
       const trackedTokenCount = state.tokens.length;
-      const attachedTokenCount = state.tokens.filter((token) => token.attachedProfiles.length).length;
+      const attachedTokenCount = state.tokens.filter((t) => t.attachedProfiles.length).length;
 
-      document.title = appName;
-      document.getElementById("brand-title").textContent = `${appName} - local credential infrastructure`;
       document.getElementById("version-badge").textContent = `v${version}`;
       document.getElementById("token-count").textContent = trackedTokenCount;
       document.getElementById("profile-count").textContent = state.profiles.length;
       document.getElementById("integration-count").textContent = attachedTokenCount;
-      document.getElementById("profile-count-tag").textContent = state.profiles.length;
+      document.getElementById("profile-count-tag").textContent = `${state.profiles.length} project${state.profiles.length !== 1 ? "s" : ""}`;
       document.getElementById("token-count-rail").textContent = trackedTokenCount;
-      document.getElementById("strip-keychain").textContent = keychainReady ? "ready" : "check required";
-      document.getElementById("strip-profiles").textContent = `${state.profiles.length} configured`;
-      document.getElementById("strip-tokens").textContent = `${trackedTokenCount} handles tracked`;
-      document.getElementById("strip-runtime").textContent = payload.cliReady ? "env injection ready" : "CLI check";
+      document.getElementById("strip-keychain").textContent = keychainReady ? "ready" : "check needed";
+      document.getElementById("strip-profiles").textContent = `${state.profiles.length} set up`;
+      document.getElementById("strip-tokens").textContent = `${trackedTokenCount} stored`;
       document.getElementById("strip-platform").textContent = payload.platform || "local";
       document.getElementById("keychain-status").textContent = keychainReady ? "keychain ready" : "keychain check";
       document.getElementById("keychain-status").className = keychainReady ? "chip good" : "chip danger";
@@ -1744,11 +1332,11 @@
       document.getElementById("project-dir").textContent = payload.projectDir || "";
       document.getElementById("profile-file").textContent = payload.profilesPath || "";
       document.getElementById("service-name").textContent = payload.service || "famtec";
+      document.getElementById("vault-status-line").textContent =
+        keychainReady ? "Keychain ready — no cloud" : "Keychain check required";
 
       const isEmpty = !state.profiles.length && !state.tokens.length;
       document.getElementById("dashboard-onboarding").style.display = isEmpty ? "block" : "none";
-      document.getElementById("vault-status-line").textContent =
-        keychainReady ? "Keychain ready — no cloud" : "Keychain check required";
 
       renderProfileRail();
       renderActivity(payload);
@@ -1758,20 +1346,16 @@
       renderTokenTable();
       renderProjects();
       syncRuntimeCommand();
-      answerMobileQuestion(true);
+      answerQuestion(true);
     }
 
     function normalizeTokens(tokens, profiles) {
-      const profileMap = new Map((profiles || []).map((profile) => [profile.name, profile]));
+      const profileMap = new Map((profiles || []).map((p) => [p.name, p]));
       const profileDerived = [];
 
       (profiles || []).forEach((profile) => {
         (profile.providers || []).forEach((provider) => {
-          profileDerived.push({
-            provider,
-            attachedProfiles: [profile.name],
-            storedInKeychain: undefined
-          });
+          profileDerived.push({ provider, attachedProfiles: [profile.name], storedInKeychain: undefined });
         });
       });
 
@@ -1793,7 +1377,6 @@
         current.status = current.attachedProfiles.length
           ? (current.storedInKeychain ? "Ready" : "Attached")
           : "Unattached";
-        current.lastUsed = current.attachedProfiles[0] || "unattached";
         current.project = current.attachedProfiles[0] || "";
         tokenMap.set(key, current);
       });
@@ -1804,13 +1387,13 @@
     function renderProfileRail() {
       const target = document.getElementById("rail-profiles");
       if (!state.profiles.length) {
-        target.innerHTML = `<div class="empty">No profiles yet.</div>`;
+        target.innerHTML = `<div class="empty">No projects yet.</div>`;
         return;
       }
-      target.innerHTML = state.profiles.map((profile) => `
-        <div class="profile-chip" style="cursor:pointer;" data-rail-project="${escapeAttribute(profile.name)}">
-          <div><strong>${escapeHtml(profile.name)}</strong><span>${profile.providers.length} handle${profile.providers.length !== 1 ? "s" : ""}</span></div>
-          <span class="chip ${profile.providers.length ? "good" : "warn"}">${profile.providers.length ? "ready" : "empty"}</span>
+      target.innerHTML = state.profiles.map((p) => `
+        <div class="profile-chip" style="cursor:pointer;" data-rail-project="${escapeAttribute(p.name)}">
+          <div><strong>${escapeHtml(p.name)}</strong><span>${p.providers.length} key${p.providers.length !== 1 ? "s" : ""}</span></div>
+          <span class="chip ${p.providers.length ? "good" : "warn"}">${p.providers.length ? "ready" : "empty"}</span>
         </div>
       `).join("");
       target.querySelectorAll("[data-rail-project]").forEach((el) => {
@@ -1823,10 +1406,12 @@
 
     function renderActivity(payload) {
       const activity = [
-        state.profiles.length ? ["profile index", `${state.profiles.length} profiles configured`, "now"] : ["vault", "Waiting for first profile", "now"],
+        state.profiles.length
+          ? ["projects", `${state.profiles.length} project${state.profiles.length !== 1 ? "s" : ""} configured`, "now"]
+          : ["setup", "No projects yet — create your first", "now"],
         ["keychain", payload.keychainReady ? "macOS Keychain ready" : "Keychain check required", "local"],
-        ["runtime", payload.cliReady ? "Injection command available" : "CLI path check required", "local"],
-        ["github sync", "Manual sync command ready", "explicit"]
+        ["cli",      payload.cliReady ? "CLI available" : "CLI check required", "local"],
+        ["share",    "Export or sync keys any time", "ready"]
       ];
       document.getElementById("activity-list").innerHTML = activity.map(([title, detail, time]) => `
         <div class="row">
@@ -1838,13 +1423,13 @@
 
     function renderHealth(keychainReady) {
       const health = state.tokens.length
-        ? state.tokens.map((token) => [token.provider, token.status, token.storedInKeychain ? token.attachedProfiles.join(", ") : `${token.attachedProfiles.join(", ")} · profile handle only`])
-        : [["Together", "Add", "famtec add together"], ["DeepSeek", "Add", "famtec add deepseek"], ["GitHub", "Optional", "famtec github connect"]];
+        ? state.tokens.map((t) => [t.provider, t.status, t.attachedProfiles.length ? t.attachedProfiles.join(", ") : "not in any project"])
+        : [["Together AI", "Add", "famtec add together"], ["DeepSeek", "Add", "famtec add deepseek"], ["GitHub", "Optional", "famtec github connect"]];
       document.getElementById("health-summary").textContent = state.tokens.length ? "tracked" : "empty";
       document.getElementById("health-list").innerHTML = health.map(([name, status, note]) => `
         <div class="row">
           <div><strong>${escapeHtml(name)}</strong><span>${escapeHtml(note)}</span></div>
-          <span class="chip ${status === "Ready" || status === "Healthy" ? "good" : status === "Attached" || status === "Unattached" || status === "Optional" || status === "Add" ? "warn" : "danger"}">${escapeHtml(status)}</span>
+          <span class="chip ${status === "Ready" || status === "Healthy" ? "good" : status === "Optional" ? "cyan" : "warn"}">${escapeHtml(status)}</span>
         </div>
       `).join("");
     }
@@ -1855,7 +1440,7 @@
       target.innerHTML = commands.map((command) => `
         <div class="command-row">
           <code>${escapeHtml(command)}</code>
-          <button class="copy" type="button" data-copy-command="${escapeAttribute(command)}" title="Copy command">
+          <button class="copy" type="button" data-copy-command="${escapeAttribute(command)}" title="Copy">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 8h11v11H8V8Z"/><path d="M5 16H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
           </button>
         </div>
@@ -1863,27 +1448,27 @@
     }
 
     function renderTokenControls() {
-      const providers = [...new Set(state.tokens.map((token) => token.provider))];
+      const providers = [...new Set(state.tokens.map((t) => t.provider))];
       const select = document.getElementById("provider-filter");
-      select.innerHTML = `<option value="">All Providers</option>${providers.map((provider) => `<option>${escapeHtml(provider)}</option>`).join("")}`;
+      select.innerHTML = `<option value="">All keys</option>${providers.map((p) => `<option>${escapeHtml(p)}</option>`).join("")}`;
     }
 
     function renderTokenTable() {
       const query = document.getElementById("token-search").value.toLowerCase();
       const filter = document.getElementById("provider-filter").value;
-      const tokens = state.tokens.filter((token) => {
-        const matchesQuery = !query || token.name.toLowerCase().includes(query) || token.provider.toLowerCase().includes(query) || token.attachedProfiles.join(" ").toLowerCase().includes(query);
-        const matchesProvider = !filter || token.provider === filter;
+      const tokens = state.tokens.filter((t) => {
+        const matchesQuery = !query || t.name.toLowerCase().includes(query) || t.provider.toLowerCase().includes(query) || t.attachedProfiles.join(" ").toLowerCase().includes(query);
+        const matchesProvider = !filter || t.provider === filter;
         return matchesQuery && matchesProvider;
       });
       const target = document.getElementById("token-table-wrap");
       if (!tokens.length) {
-        target.innerHTML = `<div class="empty">No token handles yet. Use <strong>+ Add Token</strong> to store your first key.</div>`;
+        target.innerHTML = `<div class="empty">No keys yet. Use <strong>+ Add Key</strong> to store your first key.</div>`;
         return;
       }
       target.innerHTML = `
         <table class="token-table">
-          <thead><tr><th>Name</th><th>Provider</th><th>Status</th><th>Attached to</th><th></th></tr></thead>
+          <thead><tr><th>Key name</th><th>Provider</th><th>Status</th><th>Projects</th><th></th></tr></thead>
           <tbody>
             ${tokens.map((token) => `
               <tr>
@@ -1892,8 +1477,7 @@
                 <td><span class="chip ${token.status === "Ready" ? "good" : "warn"}">${escapeHtml(token.status)}</span></td>
                 <td>${escapeHtml(token.attachedProfiles.length ? token.attachedProfiles.join(", ") : "—")}</td>
                 <td style="display:flex;gap:4px;align-items:center;height:46px;">
-                  <button class="copy" type="button" title="Copy run command" data-copy-command="${escapeAttribute(token.project ? `famtec env ${token.project}` : `famtec get ${token.name}`)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
-                  <button class="icon-btn" title="Remove from keychain" data-remove-token="${escapeAttribute(token.name)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg></button>
+                  <button class="icon-btn" title="Remove key" data-remove-token="${escapeAttribute(token.name)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg></button>
                 </td>
               </tr>
             `).join("")}
@@ -1906,7 +1490,7 @@
     }
 
     async function removeToken(provider) {
-      if (!confirm(`Remove ${provider} from keychain and all profiles?`)) return;
+      if (!confirm(`Remove ${provider} from all projects?`)) return;
       try {
         const res = await fetch("/api/token", {
           method: "DELETE",
@@ -1917,7 +1501,7 @@
         if (!data.ok) throw new Error(data.error);
         await refreshState();
       } catch (err) {
-        alert(`Remove failed: ${err.message}`);
+        alert(`Could not remove key: ${err.message}`);
       }
     }
 
@@ -1927,9 +1511,9 @@
       const attachOpen = document.getElementById("attach-open");
 
       if (!state.profiles.length) {
-        list.innerHTML = `<div class="empty">No profiles yet. Use <strong>+ New Profile</strong> to create one.</div>`;
-        document.getElementById("project-detail-title").textContent = "Profile";
-        document.getElementById("project-detail").innerHTML = `<div class="empty">Select a profile to see its tokens.</div>`;
+        list.innerHTML = `<div class="empty">No projects yet. Click <strong>+ New Project</strong> to create one.</div>`;
+        document.getElementById("project-detail-title").textContent = "Project";
+        document.getElementById("project-detail").innerHTML = `<div class="empty">Select a project to see its keys.</div>`;
         attachOpen.style.display = "none";
         attachForm.classList.remove("open");
         return;
@@ -1939,10 +1523,10 @@
         state.selectedProject = state.profiles[0].name;
       }
 
-      list.innerHTML = state.profiles.map((profile) => `
-        <button class="profile-button" type="button" aria-selected="${profile.name === state.selectedProject ? "true" : "false"}" data-project="${escapeAttribute(profile.name)}">
-          <strong>${escapeHtml(profile.name)}</strong>
-          <span>${profile.providers.length} token handle${profile.providers.length !== 1 ? "s" : ""}</span>
+      list.innerHTML = state.profiles.map((p) => `
+        <button class="profile-button" type="button" aria-selected="${p.name === state.selectedProject ? "true" : "false"}" data-project="${escapeAttribute(p.name)}">
+          <strong>${escapeHtml(p.name)}</strong>
+          <span>${p.providers.length} API key${p.providers.length !== 1 ? "s" : ""}</span>
         </button>
       `).join("");
 
@@ -1951,7 +1535,7 @@
           state.selectedProject = button.dataset.project;
           attachForm.classList.remove("open");
           renderProjects();
-          answerMobileQuestion(true);
+          answerQuestion(true);
         });
       });
 
@@ -1968,31 +1552,134 @@
                 <div><strong>${escapeHtml(provider)}</strong><span>${escapeHtml(providerLabel(provider))}</span></div>
                 <div style="display:flex;gap:6px;align-items:center;">
                   <span class="chip ${tok?.status === "Ready" ? "good" : "warn"}">${escapeHtml(tok?.status || "Attached")}</span>
-                  <button class="icon-btn" title="Detach from profile" data-detach-provider="${escapeAttribute(provider)}">
+                  <button class="icon-btn" title="Remove from project" data-detach-provider="${escapeAttribute(provider)}">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
                   </button>
                 </div>
               </div>`;
           }).join("")
-        : `<div class="empty">No tokens attached. Use <strong>+ Attach Token</strong> below.</div>`;
+        : `<div class="empty">No keys added yet. Use <strong>+ Add Key to Project</strong> below.</div>`;
 
       document.querySelectorAll("[data-detach-provider]").forEach((btn) => {
         btn.addEventListener("click", () => detachToken(selected.name, btn.dataset.detachProvider));
       });
 
-      // Populate attach dropdown with tokens not already in this profile
       const unattached = state.tokens.filter((t) => !selected.providers.includes(t.name));
       const sel = document.getElementById("attach-token-select");
       sel.innerHTML = unattached.length
         ? unattached.map((t) => `<option value="${escapeAttribute(t.name)}">${escapeHtml(t.name)}</option>`).join("")
-        : `<option value="">No other tokens stored</option>`;
+        : `<option value="">No other keys stored</option>`;
       attachOpen.style.display = unattached.length ? "block" : "none";
 
       syncRuntimeCommand();
     }
 
+    function renderShare() {
+      const select = document.getElementById("share-profile-select");
+      const currentVal = select.value || state.selectedProject || state.profiles[0]?.name || "";
+
+      if (!state.profiles.length) {
+        select.innerHTML = `<option value="">No projects yet — create one first</option>`;
+        document.getElementById("share-yaml-preview").textContent = "# Create a project and add keys first";
+        document.getElementById("share-shell-preview").textContent = "# No keys to export";
+        return;
+      }
+
+      select.innerHTML = state.profiles.map((p) =>
+        `<option value="${escapeAttribute(p.name)}"${p.name === currentVal ? " selected" : ""}>${escapeHtml(p.name)}</option>`
+      ).join("");
+
+      updateSharePreviews();
+    }
+
+    function updateSharePreviews() {
+      const profileName = document.getElementById("share-profile-select").value || state.profiles[0]?.name || "";
+      const profile = state.profiles.find((p) => p.name === profileName);
+      if (!profile) return;
+
+      const providers = profile.providers;
+
+      // GitHub Actions YAML
+      const yamlLines = providers.length
+        ? ["- name: Run with keys from Keytec", "  env:", ...providers.map((p) => `    ${p}: \${{ secrets.${p} }}`), "  run: npm run build"]
+        : ["# No keys in this project yet"];
+      const yamlText = yamlLines.join("\n");
+      document.getElementById("share-yaml-preview").textContent = yamlText;
+      document.getElementById("copy-yaml-btn").dataset.copyCommand = yamlText;
+
+      // Shell exports (shows key names only — values require Keychain read)
+      const shellLines = providers.length
+        ? providers.map((p) => `export ${p}="$(famtec get ${p} --show)"`)
+        : ["# No keys in this project yet"];
+      const shellText = shellLines.join("\n");
+      document.getElementById("share-shell-preview").textContent = shellText;
+      document.getElementById("copy-shell-btn").dataset.copyCommand = shellText;
+
+      // Sync command
+      const syncCmd = `famtec github sync ${profileName} owner/repo`;
+      document.getElementById("share-sync-command").textContent = syncCmd;
+      document.getElementById("share-sync-copy").dataset.copyCommand = syncCmd;
+    }
+
+    async function exportEnvDownload() {
+      const profileName = document.getElementById("share-profile-select").value || state.profiles[0]?.name;
+      if (!profileName) { alert("Please select a project first."); return; }
+
+      const btn = document.getElementById("export-env-download");
+      btn.textContent = "Fetching keys…";
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`/api/profile/${encodeURIComponent(profileName)}/env`);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "Could not fetch keys");
+
+        const lines = Object.entries(data.env).map(([k, v]) => `${k}=${v}`).join("\n");
+        const blob = new Blob([lines + "\n"], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${profileName}.env`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        alert(`Export failed: ${err.message}`);
+      } finally {
+        btn.textContent = "Download .env";
+        btn.disabled = false;
+      }
+    }
+
+    async function exportEnvCopy() {
+      const profileName = document.getElementById("share-profile-select").value || state.profiles[0]?.name;
+      if (!profileName) { alert("Please select a project first."); return; }
+
+      const btn = document.getElementById("export-env-copy");
+      btn.textContent = "Copying…";
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`/api/profile/${encodeURIComponent(profileName)}/env`);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || "Could not fetch keys");
+
+        const text = Object.entries(data.env).map(([k, v]) => `${k}=${v}`).join("\n") + "\n";
+        await navigator.clipboard.writeText(text);
+        btn.textContent = "Copied!";
+        setTimeout(() => { btn.textContent = "Copy .env text"; btn.disabled = false; }, 1500);
+      } catch (err) {
+        alert(`Copy failed: ${err.message}`);
+        btn.textContent = "Copy .env text";
+        btn.disabled = false;
+      }
+    }
+
+    document.getElementById("share-profile-select").addEventListener("change", updateSharePreviews);
+    document.getElementById("export-env-download").addEventListener("click", exportEnvDownload);
+    document.getElementById("export-env-copy").addEventListener("click", exportEnvCopy);
+
     async function deleteProfile(name) {
-      if (!confirm(`Delete profile "${name}"? This does not remove keys from the keychain.`)) return;
+      if (!confirm(`Delete project "${name}"? Your API keys will stay in the Keychain.`)) return;
       try {
         const res = await fetch("/api/profile", {
           method: "DELETE",
@@ -2004,7 +1691,7 @@
         state.selectedProject = "";
         await refreshState();
       } catch (err) {
-        alert(`Delete failed: ${err.message}`);
+        alert(`Could not delete project: ${err.message}`);
       }
     }
 
@@ -2019,7 +1706,7 @@
         if (!data.ok) throw new Error(data.error);
         await refreshState();
       } catch (err) {
-        alert(`Detach failed: ${err.message}`);
+        alert(`Could not remove key from project: ${err.message}`);
       }
     }
 
@@ -2036,7 +1723,7 @@
         document.getElementById("attach-form").classList.remove("open");
         await refreshState();
       } catch (err) {
-        alert(`Attach failed: ${err.message}`);
+        alert(`Could not add key to project: ${err.message}`);
       }
     }
 
@@ -2044,48 +1731,46 @@
       try {
         const payload = await fetch("/api/status").then((r) => r.json());
         hydrate(payload);
-      } catch {
-        /* offline — leave state as-is */
-      }
+      } catch { /* offline */ }
     }
 
     function syncRuntimeCommand() {
-      const fallbackProfile = state.selectedProject || state.profiles[0]?.name || "openclaw";
-      const command = `famtec run ${fallbackProfile} -- npm run dev`;
+      const fallback = state.selectedProject || state.profiles[0]?.name || "openclaw";
+      const command = `famtec run ${fallback} -- npm run dev`;
       document.getElementById("runtime-command").value = command;
       document.getElementById("runtime-copy").dataset.copyCommand = command;
     }
 
-    function answerMobileQuestion(silent = false) {
+    function answerQuestion(silent = false) {
       const input = document.getElementById("mobile-question-input").value.toLowerCase().trim();
       const selected = state.profiles.find((p) => p.name === state.selectedProject) || state.profiles[0];
       let answer;
 
       if (!state.profiles.length) {
-        answer = "No profiles configured yet. Create a profile and attach tokens to it.";
+        answer = "No projects yet. Create a project and add keys to it.";
       } else if (input.includes("run") || input.includes("start") || input.includes("how")) {
         answer = selected
-          ? `Run: famtec run ${selected.name} -- npm run dev  — this injects all attached keys as env vars without writing a file.`
-          : "Select a profile first, then ask how to run it.";
-      } else if (input.includes("token") || input.includes("key") || input.includes("need")) {
+          ? `Run: famtec run ${selected.name} -- npm run dev  — keys are injected as env vars without writing a file.`
+          : "Select a project first.";
+      } else if (input.includes("key") || input.includes("need") || input.includes("token")) {
         answer = selected
           ? selected.providers.length
-            ? `${selected.name} needs: ${selected.providers.join(", ")}. Values are stored in macOS Keychain — never shown here.`
-            : `${selected.name} has no tokens attached yet. Use + Attach Token on the Projects tab.`
-          : "Select a profile to see which keys it needs.";
-      } else if (input.includes("profile") || input.includes("project")) {
+            ? `${selected.name} needs: ${selected.providers.join(", ")}. Values are in macOS Keychain.`
+            : `${selected.name} has no keys yet. Add some on the Projects tab.`
+          : "Select a project to see what keys it needs.";
+      } else if (input.includes("project") || input.includes("profile")) {
         const names = state.profiles.map((p) => `${p.name} (${p.providers.length} keys)`).join(", ");
-        answer = `${state.profiles.length} profile${state.profiles.length !== 1 ? "s" : ""}: ${names}.`;
-      } else if (input.includes("github") || input.includes("ci") || input.includes("sync")) {
+        answer = `${state.profiles.length} project${state.profiles.length !== 1 ? "s" : ""}: ${names}.`;
+      } else if (input.includes("github") || input.includes("ci") || input.includes("sync") || input.includes("share") || input.includes("export")) {
         answer = selected
-          ? `Sync to GitHub Actions: famtec github sync ${selected.name} owner/repo — pushes keys as Actions Secrets explicitly.`
-          : "Select a profile first to get the sync command.";
+          ? `To sync to GitHub Actions: famtec github sync ${selected.name} owner/repo. To export as .env: go to the Share tab.`
+          : "Select a project first.";
       } else {
         answer = selected
           ? selected.providers.length
-            ? `${selected.name} needs ${selected.providers.join(", ")}. Key values stay in the macOS Keychain — this vault never exposes them.`
-            : `${selected.name} exists but has no tokens attached yet.`
-          : "Start by creating a profile, then attach your API keys to it.";
+            ? `${selected.name} has ${selected.providers.join(", ")}. Values stay in macOS Keychain.`
+            : `${selected.name} exists but has no keys yet.`
+          : "Start by creating a project, then add your API keys to it.";
       }
 
       document.getElementById("mobile-answer").textContent = answer;
@@ -2094,24 +1779,18 @@
 
     function providerLabel(provider) {
       const clean = String(provider).replace(/_API_KEY$|_TOKEN$/g, "").replace(/_/g, " ").toLowerCase();
-      return clean.replace(/\b\w/g, (letter) => letter.toUpperCase());
+      return clean.replace(/\b\w/g, (l) => l.toUpperCase());
     }
 
     function escapeHtml(value) {
-      return String(value).replace(/[&<>"']/g, (char) => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        "\"": "&quot;",
-        "'": "&#039;"
-      })[char]);
+      return String(value).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"})[c]);
     }
 
     function escapeAttribute(value) {
       return escapeHtml(value).replace(/`/g, "&#096;");
     }
 
-    // --- Add Token Modal ---
+    // --- Add Key Modal ---
 
     const KNOWN_NAMES = new Set(["GITHUB_TOKEN", "TOGETHER_API_KEY", "DEEPSEEK_API_KEY"]);
 
@@ -2123,7 +1802,6 @@
     }
 
     function openAddTokenModal() {
-      const backdrop = document.getElementById("add-token-backdrop");
       const profileSelect = document.getElementById("modal-profile");
       profileSelect.innerHTML = `<option value="">— none —</option>` +
         state.profiles.map((p) => `<option value="${escapeAttribute(p.name)}">${escapeHtml(p.name)}</option>`).join("");
@@ -2132,7 +1810,7 @@
       document.getElementById("modal-key-preview").textContent = "";
       document.getElementById("modal-error").classList.remove("visible");
       document.getElementById("modal-success").classList.remove("visible");
-      backdrop.classList.add("open");
+      document.getElementById("add-token-backdrop").classList.add("open");
       document.getElementById("modal-provider").focus();
     }
 
@@ -2164,8 +1842,8 @@
           body: JSON.stringify({ provider, secret, profile: profile || undefined })
         });
         const data = await response.json();
-        if (!data.ok) throw new Error(data.error || "Failed to save token");
-        successEl.textContent = `Saved ${data.provider} to keychain.${profile ? ` Attached to ${profile}.` : ""}`;
+        if (!data.ok) throw new Error(data.error || "Failed to save key");
+        successEl.textContent = `Saved ${data.provider} to Keychain.${profile ? ` Added to project ${profile}.` : ""}`;
         successEl.classList.add("visible");
         document.getElementById("modal-secret").value = "";
         window.setTimeout(() => {
@@ -2181,7 +1859,7 @@
       }
     }
 
-    // --- Attach / detach wiring ---
+    // --- Attach/detach wiring ---
     document.getElementById("attach-open").addEventListener("click", () => {
       document.getElementById("attach-form").classList.toggle("open");
     });
@@ -2193,21 +1871,23 @@
       if (state.selectedProject && provider) attachToken(state.selectedProject, provider);
     });
 
-    // --- Create Profile modal ---
+    // --- Create Project modal ---
     function openCreateProfileModal() {
       document.getElementById("cp-modal-name").value = "";
       document.getElementById("cp-modal-error").classList.remove("visible");
       document.getElementById("create-profile-backdrop").classList.add("open");
       document.getElementById("cp-modal-name").focus();
     }
+
     function closeCreateProfileModal() {
       document.getElementById("create-profile-backdrop").classList.remove("open");
     }
+
     async function submitCreateProfile() {
       const name = document.getElementById("cp-modal-name").value.trim();
       const errorEl = document.getElementById("cp-modal-error");
       errorEl.classList.remove("visible");
-      if (!name) { errorEl.textContent = "Profile name is required."; errorEl.classList.add("visible"); return; }
+      if (!name) { errorEl.textContent = "Project name is required."; errorEl.classList.add("visible"); return; }
       if (!/^[a-zA-Z0-9._-]+$/.test(name)) { errorEl.textContent = "Letters, numbers, dots, hyphens, underscores only."; errorEl.classList.add("visible"); return; }
       const btn = document.getElementById("cp-modal-save");
       btn.textContent = "Creating…"; btn.disabled = true;
@@ -2226,9 +1906,10 @@
       } catch (err) {
         errorEl.textContent = err.message; errorEl.classList.add("visible");
       } finally {
-        btn.textContent = "Create Profile"; btn.disabled = false;
+        btn.textContent = "Create Project"; btn.disabled = false;
       }
     }
+
     document.getElementById("rail-new-profile").addEventListener("click", openCreateProfileModal);
     document.getElementById("projects-new-profile").addEventListener("click", openCreateProfileModal);
     document.getElementById("cp-modal-cancel").addEventListener("click", closeCreateProfileModal);
@@ -2240,9 +1921,8 @@
       if (e.key === "Enter") submitCreateProfile();
     });
 
-    // --- Onboarding button ---
+    // --- Onboarding ---
     document.getElementById("onboarding-add-token").addEventListener("click", openAddTokenModal);
-
     document.getElementById("open-add-token").addEventListener("click", openAddTokenModal);
     document.getElementById("modal-cancel").addEventListener("click", closeAddTokenModal);
     document.getElementById("modal-save").addEventListener("click", submitAddToken);
@@ -2251,13 +1931,10 @@
     });
     document.getElementById("modal-provider").addEventListener("input", (e) => {
       const preview = normalizeProviderPreview(e.target.value);
-      document.getElementById("modal-key-preview").textContent = preview ? `Env key: ${preview}` : "";
+      document.getElementById("modal-key-preview").textContent = preview ? `Will be stored as: ${preview}` : "";
     });
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        closeAddTokenModal();
-        closeCreateProfileModal();
-      }
+      if (e.key === "Escape") { closeAddTokenModal(); closeCreateProfileModal(); }
     });
   </script>
 </body>
