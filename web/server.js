@@ -188,6 +188,7 @@ function getStatus() {
   return {
     app: appName,
     service: "famtec",
+    apiConnected: true,
     projectDir,
     platform: platform(),
     version: readPackageVersion(packagePath),

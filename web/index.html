@@ -1205,6 +1205,8 @@
       commands: [],
       tokens: [],
       selectedProject: "",
+      apiConnected: true,
+      apiMessage: "",
       activeView: titles[requestedView] ? requestedView : "dashboard"
     };
 
@@ -1241,10 +1243,15 @@
     if (params.get("demo") === "1") {
       hydrate(getFallbackPayload());
     } else {
-      fetch("/api/status")
+      apiFetch("/api/status")
         .then((response) => response.json())
         .then((payload) => hydrate(payload))
-        .catch(() => hydrate(getFallbackPayload()));
+        .catch(() => hydrate(getFallbackPayload({
+          apiConnected: false,
+          keychainReady: false,
+          projectDir: "static preview - local server unavailable",
+          apiMessage: localServerMessage()
+        })));
     }
 
     function hydrate(payload) {
@@ -1252,6 +1259,8 @@
       state.commands = payload.commands || [];
       state.tokens = normalizeTokens(payload.tokens || [], state.profiles);
       state.selectedProject = state.profiles[0]?.name || "";
+      state.apiConnected = payload.apiConnected !== false;
+      state.apiMessage = payload.apiMessage || "";
       renderStatus(payload);
       activateView(state.activeView);
     }
@@ -1275,10 +1284,23 @@
       });
     }
 
-    function getFallbackPayload() {
+    function apiFetch(path, options) {
+      if (!/^https?:$/.test(window.location.protocol)) {
+        return Promise.reject(new Error(localServerMessage()));
+      }
+      return fetch(path, options);
+    }
+
+    function localServerMessage() {
+      return "Open the Keytec app or run node web/server.js to enable Keychain actions.";
+    }
+
+    function getFallbackPayload(overrides = {}) {
       return {
         app: "Keytec API Wallet",
         service: "famtec",
+        apiConnected: true,
+        apiMessage: "",
         projectDir: "local preview",
         platform: "darwin",
         version: "0.1.0",
@@ -1305,7 +1327,8 @@
           "famtec profile attach openclaw deepseek",
           "famtec run openclaw -- npm run dev",
           "famtec list"
-        ]
+        ],
+        ...overrides
       };
     }
 
@@ -1332,8 +1355,9 @@
       document.getElementById("project-dir").textContent = payload.projectDir || "";
       document.getElementById("profile-file").textContent = payload.profilesPath || "";
       document.getElementById("service-name").textContent = payload.service || "famtec";
-      document.getElementById("vault-status-line").textContent =
-        keychainReady ? "Keychain ready — no cloud" : "Keychain check required";
+      document.getElementById("vault-status-line").textContent = state.apiConnected
+        ? (keychainReady ? "Keychain ready — no cloud" : "Keychain check required")
+        : state.apiMessage || localServerMessage();
 
       const isEmpty = !state.profiles.length && !state.tokens.length;
       document.getElementById("dashboard-onboarding").style.display = isEmpty ? "block" : "none";
@@ -1409,6 +1433,7 @@
         state.profiles.length
           ? ["projects", `${state.profiles.length} project${state.profiles.length !== 1 ? "s" : ""} configured`, "now"]
           : ["setup", "No projects yet — create your first", "now"],
+        ["api", state.apiConnected ? "Local dashboard API connected" : (state.apiMessage || localServerMessage()), state.apiConnected ? "ready" : "offline"],
         ["keychain", payload.keychainReady ? "macOS Keychain ready" : "Keychain check required", "local"],
         ["cli",      payload.cliReady ? "CLI available" : "CLI check required", "local"],
         ["share",    "Export or sync keys any time", "ready"]
@@ -1492,7 +1517,7 @@
     async function removeToken(provider) {
       if (!confirm(`Remove ${provider} from all projects?`)) return;
       try {
-        const res = await fetch("/api/token", {
+        const res = await apiFetch("/api/token", {
           method: "DELETE",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ provider })
@@ -1630,7 +1655,7 @@
       btn.disabled = true;
 
       try {
-        const res = await fetch(`/api/profile/${encodeURIComponent(profileName)}/env`);
+        const res = await apiFetch(`/api/profile/${encodeURIComponent(profileName)}/env`);
         const data = await res.json();
         if (!data.ok) throw new Error(data.error || "Could not fetch keys");
 
@@ -1659,7 +1684,7 @@
       btn.disabled = true;
 
       try {
-        const res = await fetch(`/api/profile/${encodeURIComponent(profileName)}/env`);
+        const res = await apiFetch(`/api/profile/${encodeURIComponent(profileName)}/env`);
         const data = await res.json();
         if (!data.ok) throw new Error(data.error || "Could not fetch keys");
 
@@ -1681,7 +1706,7 @@
     async function deleteProfile(name) {
       if (!confirm(`Delete project "${name}"? Your API keys will stay in the Keychain.`)) return;
       try {
-        const res = await fetch("/api/profile", {
+        const res = await apiFetch("/api/profile", {
           method: "DELETE",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ name })
@@ -1697,7 +1722,7 @@
 
     async function detachToken(profile, provider) {
       try {
-        const res = await fetch("/api/profile/detach", {
+        const res = await apiFetch("/api/profile/detach", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ profile, provider })
@@ -1713,7 +1738,7 @@
     async function attachToken(profile, provider) {
       if (!provider) return;
       try {
-        const res = await fetch("/api/profile/attach", {
+        const res = await apiFetch("/api/profile/attach", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ profile, provider })
@@ -1729,7 +1754,7 @@
 
     async function refreshState() {
       try {
-        const payload = await fetch("/api/status").then((r) => r.json());
+        const payload = await apiFetch("/api/status").then((r) => r.json());
         hydrate(payload);
       } catch { /* offline */ }
     }
@@ -1836,7 +1861,7 @@
       saveBtn.disabled = true;
 
       try {
-        const response = await fetch("/api/token", {
+        const response = await apiFetch("/api/token", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ provider, secret, profile: profile || undefined })
@@ -1848,7 +1873,7 @@
         document.getElementById("modal-secret").value = "";
         window.setTimeout(() => {
           closeAddTokenModal();
-          fetch("/api/status").then((r) => r.json()).then(hydrate).catch(() => {});
+          apiFetch("/api/status").then((r) => r.json()).then(hydrate).catch(() => {});
         }, 1200);
       } catch (err) {
         errorEl.textContent = err.message;
@@ -1892,7 +1917,7 @@
       const btn = document.getElementById("cp-modal-save");
       btn.textContent = "Creating…"; btn.disabled = true;
       try {
-        const res = await fetch("/api/profile", {
+        const res = await apiFetch("/api/profile", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ name })
